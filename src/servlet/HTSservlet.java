@@ -45,11 +45,11 @@ public class HTSservlet extends HttpServlet {
  
             String recievedString = new String(input);
             response.setStatus(HttpServletResponse.SC_OK);
+            System.out.println(recievedString);
             OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
  
-            Integer doubledValue = Integer.parseInt(recievedString) * 2;
  
-            writer.write(doubledValue.toString());
+            writer.write("Succes");
             writer.flush();
             writer.close();
  
