@@ -47,7 +47,7 @@ public class HTSservlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
             System.out.println(recievedString);
             OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
- 
+            
  
             writer.write("Succes");
             writer.flush();
