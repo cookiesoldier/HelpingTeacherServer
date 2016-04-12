@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.json.simple.JSONObject;
 
+//import com.firebase.client.Firebase;
+
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -18,6 +20,7 @@ public class FirebaseConn {
 	
 	static String firebase_baseUrl ="https://helpingteach.firebaseio.com/";
 	static Firebase firebase;
+	
 
 	static{
 		try {
@@ -49,7 +52,7 @@ public class FirebaseConn {
 		userInfoMap.put("EMAIL", "NULL");
 		userInfoMap.put("FIRSTNAME", "NULL");
 		userInfoMap.put("LASTNAME", "NULL");
-		//Tilføj RecievedData til userMap
+		//Tilfï¿½j RecievedData til userMap
 		System.out.println("Test3");
 		
 		userMap.put(userID, userInfoMap);
@@ -80,6 +83,12 @@ public class FirebaseConn {
 		
 		return userID;
 		
+	}
+	
+	public static FirebaseResponse loginUser(JSONObject user) {
+		String username = user.get("username");
+		String password = user.get("password");
+		firebase.
 	}
 
 }
