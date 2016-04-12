@@ -14,8 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import firebaseConn.FirebaseConnection;
-import firebaseConn.IFirebaseConnection;
+
 
 
 /**
@@ -48,7 +47,6 @@ public class HTSservlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-			IFirebaseConnection firebaseConn = new FirebaseConnection();
 			int length = request.getContentLength();
 			
 			if(length > 0){
@@ -64,11 +62,6 @@ public class HTSservlet extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			JSONObject recievedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
-			if(recievedData.get("TASK").equals("CREATEUSER")){
-				firebaseConn.createUser(recievedData);
-				
-				
-			}
 			
 		
 			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
