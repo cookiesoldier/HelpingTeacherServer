@@ -15,9 +15,9 @@ import com.firebase.client.ValueEventListener;
 import dtos.UserDTO;
 
 public class FirebaseConnection implements IFirebaseConnection {
-	
+
 	Firebase ref;
-	
+
 	public FirebaseConnection() {
 		ref = new Firebase("https://helpingteach.firebaseio.com/");
 	}
@@ -92,20 +92,37 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	@Override
 	public JSONObject userToJSON(UserDTO user) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		obj.put("username", user.getUsername());
+		obj.put("email", user.getEmail());
+		obj.put("password", user.getPassword());
+		obj.put("firstname", user.getFirstname());
+		obj.put("lastname", user.getLastname());
+		return obj;
 	}
 
 	@Override
 	public UserDTO JSONtoUser(JSONObject obj) {
-		// TODO Auto-generated method stub
-		return null;
+		UserDTO user;
+		String username = obj.get("username").toString();
+		String email = obj.get("email").toString();
+		String password = obj.get("password").toString();
+		String firstname = obj.get("firstname").toString();
+		String lastname = obj.get("lastname").toString();
+		user = new UserDTO(username, email, firstname, lastname, password);
+		return user;
 	}
 
 	@Override
 	public boolean isJSONObjectUser(JSONObject obj) {
-		// TODO Auto-generated method stub
-		return false;
+		if(obj.size() == 5) {
+			if(!obj.containsKey("username")) return false;
+			if(!obj.containsKey("email")) return false;
+			if(!obj.containsKey("password")) return false;
+			if(!obj.containsKey("firstname")) return false;
+			if(!obj.containsKey("lastname")) return false;
+		} else return false;
+		return true;
 	}
 
 

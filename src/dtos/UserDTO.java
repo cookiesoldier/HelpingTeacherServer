@@ -4,28 +4,20 @@ package dtos;
 
 public class UserDTO {
 	
+	String username = " ";
 	String email = " ";
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
-	String username = " ";
-	
-	public UserDTO(String email, String firstname, String lastname, String password, String username) {
-		if (email != null) {
-			this.email = email;
-		} 
-		if (firstname != null) {
-			this.firstname = firstname;
-		} 
-		if (lastname != null) {
-			this.lastname = lastname;
-		} 
-		if (password != null) {
-			this.password = password;
-		}
-		if (username != null) {
-			this.username = username;
-		}
+
+
+	public UserDTO(String username, String email, String firstname, String lastname, String password) {
+		if (username != null) this.username = username;
+		if (email != null) this.email = email;
+		if (firstname != null) this.firstname = firstname;
+		if (lastname != null) this.lastname = lastname; 
+		if (password != null) this.password = password;
+
 	}
 	public UserDTO(String password, String username) {
 		if (password != null) {
@@ -68,14 +60,18 @@ public class UserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public String getUsername(){
+
+	public String getUsername() {
 		return username;
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
+	
+	
+
 	
 	
 	
