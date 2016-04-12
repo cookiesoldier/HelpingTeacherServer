@@ -72,7 +72,7 @@ public class HTSservlet extends HttpServlet {
 			System.out.println(firebResponse.toString());
 			
 			if(firebResponse == null){
-				response.setStatus(404);
+				response.setStatus(404); 
 			}else{
 				response.setStatus(firebResponse.getCode());
 			}
