@@ -1,49 +1,55 @@
+
 package firebaseConn;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.simple.JSONObject;
+
 import com.firebase.client.Firebase;
 
-import dtos.UserJSON;
+import dtos.UserDTO;
 
 public class FirebaseConnection implements IFirebaseConnection {
 	
-	String firebaseUrl = "https://helpingteach.firebaseio.com/";
-	Firebase firebaseRef = new Firebase(firebaseUrl);
+	Firebase ref;
 	
-	
-	@Override
-	public boolean createUser(UserJSON user) {
-	Firebase ref = firebaseRef.child("users");
-		
-		Map<String,Object> userInfo = new HashMap<String,Object>();
-		userInfo.put("PASSWORD", user.getPassword());
-		userInfo.put("FIRSTNAME", user.getFirstname());
-		userInfo.put("LASTNAME", user.getLastname());
-		userInfo.put("EMAIL",user.getEmail());
-		
-		
-		Map<String, Object> users = new HashMap<String, Object>();
-		users.put(user.get("USERNAME").toString(), userInfo);
-		System.out.println(users);
-		ref.setValue(users);
-		return false;
+	public FirebaseConnection() {
+		ref = new Firebase("http://localhost:8080/HelpingTeacherServer2/HTSservlet");
 	}
+
 	@Override
-	public boolean authUser(UserJSON user) {
+	public boolean createUser(UserDTO user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
-	public UserJSON getUser(String name) {
+	public boolean authUser(UserDTO user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public UserDTO getUser(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
+	@Override
+	public JSONObject userToJSON(UserDTO user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public UserDTO JSONtoUser(JSONObject obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isJSONObjectUser(JSONObject obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
 }
