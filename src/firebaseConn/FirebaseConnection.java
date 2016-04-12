@@ -14,17 +14,22 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	@Override
 	public boolean createUser(JSONObject user) {
-		Firebase ref = firebaseRef.child("USERS");
+		Firebase ref = firebaseRef.child("users");
 		
 		Map<String,Object> userInfo = new HashMap<String,Object>();
 		userInfo.put("PASSWORD", user.get("PASSWORD"));
-		userInfo.put("FIRSTNAME", user.get("FIRSTNAE"));
-		userInfo.put("LASTNAME", user.get("LASTNAME"));
-		userInfo.put("EMAIL",user.get("EMAIL"));
+//		userInfo.put("FIRSTNAME", user.get("FIRSTNAE"));
+//		userInfo.put("LASTNAME", user.get("LASTNAME"));
+//		userInfo.put("EMAIL",user.get("EMAIL"));
 		
+		userInfo.put("FIRSTNAME", "");
+		userInfo.put("LASTNAME", "");
+		userInfo.put("EMAIL","");
 		Map<String, Object> users = new HashMap<String, Object>();
-		users.put("USERS", userInfo);
+		users.put(user.get("USERNAME").toString(), userInfo);
 		
+		
+		System.out.println(users);
 		ref.setValue(users);
 		
 		
