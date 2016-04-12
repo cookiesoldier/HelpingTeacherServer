@@ -15,9 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import firebaseConn.FirebaseConn;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
+
 
 /**
  * Servlet implementation class HTSservlet
@@ -64,18 +62,7 @@ public class HTSservlet extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			JSONObject recievedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
-			FirebaseResponse firebResponse = null;
-			if(recievedData.get("TASK").equals("CREATEUSER")){
-
-				firebResponse = FirebaseConn.firebaseCreateUser(recievedData);
-			}
-			System.out.println(firebResponse.toString());
 			
-			if(firebResponse == null){
-				response.setStatus(404); 
-			}else{
-				response.setStatus(firebResponse.getCode());
-			}
 		
 			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 			if(response.getStatus() == 404){
@@ -87,13 +74,13 @@ public class HTSservlet extends HttpServlet {
 			writer.flush();
 			writer.close();}
 
-		} catch (IOException | ParseException | JacksonUtilityException | FirebaseException e) {
+		} catch (IOException | ParseException e) {
 
 			try {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().print(e.getMessage());
 				response.getWriter().close();
-			} catch (IOException ioe) {
+			} catch (IOException e1) {
 			}
 		}
 	}

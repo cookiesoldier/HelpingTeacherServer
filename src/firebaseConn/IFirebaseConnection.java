@@ -1,11 +1,13 @@
 package firebaseConn;
 
-import com.firebase.client.*;
+import org.json.simple.JSONObject;
+
+
 
 public interface IFirebaseConnection {
 	
 	boolean createUser(JSONObject user);
-	boolean authUser(JSONObjet user);
+	boolean authUser(JSONObject user);
 	
 
 }
