@@ -17,6 +17,7 @@ import org.json.simple.parser.ParseException;
 import firebaseConn.FirebaseConn;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
+import net.thegreshams.firebase4j.model.FirebaseResponse;
 
 /**
  * Servlet implementation class HTSservlet
@@ -34,17 +35,18 @@ public class HTSservlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	 new org.apache.http.client.methods.HttpRequestBase() {
-
-			@Override
-			public String getMethod() {
-				// TODO Auto-generated method stub
-				return null;
-			}}.getClass();
+//    	 new org.apache.http.client.methods.HttpRequestBase() {
+//
+//			@Override
+//			public String getMethod() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}}.getClass();
         response.getOutputStream().println("Hurray !! This Servlet Works");
  
     }
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
+    @SuppressWarnings("unused")
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
 			int length = request.getContentLength();
@@ -62,22 +64,26 @@ public class HTSservlet extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			JSONObject recievedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
-			System.out.println("ellooooo");
-			String firebResponse = "NULL";
+			FirebaseResponse firebResponse = null;
 			if(recievedData.get("TASK").equals("CREATEUSER")){
-				
-				
-				System.out.println("test henrik og signe");
-				firebResponse = FirebaseConn.firebaseCreateUser(recievedData);
-				System.out.println("test Martin");
-			}
-			System.out.println(recievedString);
-			response.setStatus(HttpServletResponse.SC_OK);
-//			System.out.println("FirebaseRespons: " + firebResponse);
-//			System.out.println("RecievedString: "+ recievedString);
-			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 
-			writer.write("Succes");
+				firebResponse = FirebaseConn.firebaseCreateUser(recievedData);
+			}
+			System.out.println(firebResponse.toString());
+			
+			if(firebResponse == null){
+				response.setStatus(404);
+			}else{
+				response.setStatus(firebResponse.getCode());
+			}
+		
+			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+			if(response.getStatus() == 404){
+				writer.write("CONNECTION TO FIREBASE FAILED");
+			}else{
+				writer.write("CONNECTION TO FIREBASE SUCCES");
+			}
+			
 			writer.flush();
 			writer.close();}
 

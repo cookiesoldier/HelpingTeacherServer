@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package firebaseConn;
 
 import java.io.UnsupportedEncodingException;
@@ -86,9 +87,14 @@ public class FirebaseConn {
 	}
 	
 	public static FirebaseResponse loginUser(JSONObject user) {
-		String username = user.get("username");
-		String password = user.get("password");
-		firebase.
+		String username = (String) user.get("username");
+		String password = (String) user.get("password");
+		//firebase.
 	}
 
 }
+
+
+
+	
+
