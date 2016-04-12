@@ -4,24 +4,18 @@ import org.json.simple.JSONObject;
 
 public class UserDTO {
 	
+	String username = " ";
 	String email = " ";
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
 	
-	public UserDTO(String email, String firstname, String lastname, String password) {
-		if (email != null) {
-			this.email = email;
-		} 
-		if (firstname != null) {
-			this.firstname = firstname;
-		} 
-		if (lastname != null) {
-			this.lastname = lastname;
-		} 
-		if (password != null) {
-			this.password = password;
-		}
+	public UserDTO(String username, String email, String firstname, String lastname, String password) {
+		if (username != null) this.username = username;
+		if (email != null) this.email = email;
+		if (firstname != null) this.firstname = firstname;
+		if (lastname != null) this.lastname = lastname; 
+		if (password != null) this.password = password;
 	}
 
 	public String getEmail() {
@@ -55,6 +49,16 @@ public class UserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
 	
 	
 	
