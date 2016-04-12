@@ -3,10 +3,14 @@ package firebaseConn;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.simple.JSONObject;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import dtos.UserDTO;
 
@@ -35,9 +39,43 @@ public class FirebaseConnection implements IFirebaseConnection {
 		users.put(user.getUsername(), userInfoMap);
 		
 		//check if user exists
-		usersRef.updateChildren(users);
+		
+		final AtomicBoolean done = new AtomicBoolean(false);
+		final AtomicBoolean succes = new AtomicBoolean(false);
+		
+		usersRef.child(user.getUsername()).addListenerForSingleValueEvent(new ValueEventListener() {
+		    @Override
+		    public void onDataChange(DataSnapshot snapshot) {
+		    	
+		    	if(!snapshot.hasChildren()){
+					usersRef.updateChildren(users);
+					System.out.println("didnt find one name:"+user.getUsername());
+					succes.set(true);
+					
+					
+					
+				}else{
+					System.out.println("found one name:"+user.getUsername());
+					succes.set(false);
+					done.set(true);
+				
+					
+				}
+		    }
+		    @Override
+		    public void onCancelled(FirebaseError firebaseError) {
+		    }
+		});
+		while(!done.get()){
+			//derp derp sikke en løsning!
+		};
+		
+		return succes.get();
+		
+		
+		
 		//usersRef.setValue(users);
-		return false;
+		//return false;
 	}
 
 	@Override
