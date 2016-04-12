@@ -54,10 +54,11 @@ public class FirebaseConn {
 		
 		userMap.put(userID, userInfoMap);
 		usersMap.put("USERS", userMap);
-		response = firebase.put("USERS", new LinkedHashMap<String,Object>());
+		response = firebase.put("USERS", usersMap);
 		
 		
 		System.out.println("Test4");
+		System.out.println(response.toString());
 		return response.toString();
 		
 		

@@ -34,7 +34,13 @@ public class HTSservlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	 
+    	 new org.apache.http.client.methods.HttpRequestBase() {
+
+			@Override
+			public String getMethod() {
+				// TODO Auto-generated method stub
+				return null;
+			}}.getClass();
         response.getOutputStream().println("Hurray !! This Servlet Works");
  
     }
