@@ -14,6 +14,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import dtos.UserJSON;
+import firebaseConn.FirebaseConnection;
+import firebaseConn.IFirebaseConnection;
+
 
 
 
@@ -60,9 +64,14 @@ public class HTSservlet extends HttpServlet {
 
 			String recievedString = new String(input);
 			JSONParser parser = new JSONParser();
-			JSONObject recievedData = (JSONObject) parser.parse(recievedString);
+			JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
-			
+			if(receivedData.get("TASK").equals("CREATEUSER")){
+				UserJSON userjson = new UserJSON(receivedData.get("EMAIL").toString(), receivedData.get("FIRSTNAME").toString(), 
+													receivedData.get("LASTNAME").toString(), receivedData.get("PASSWORd").toString());
+				IFirebaseConnection firebase = new FirebaseConnection();
+				firebase.createUser(userjson);
+			}
 		
 			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 			if(response.getStatus() == 404){
