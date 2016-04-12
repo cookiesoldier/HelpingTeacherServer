@@ -1,6 +1,6 @@
 package dtos;
 
-import org.json.simple.JSONObject;
+
 
 public class UserDTO {
 	
@@ -8,8 +8,9 @@ public class UserDTO {
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
+	String username = " ";
 	
-	public UserDTO(String email, String firstname, String lastname, String password) {
+	public UserDTO(String email, String firstname, String lastname, String password, String username) {
 		if (email != null) {
 			this.email = email;
 		} 
@@ -22,7 +23,19 @@ public class UserDTO {
 		if (password != null) {
 			this.password = password;
 		}
+		if (username != null) {
+			this.username = username;
+		}
 	}
+	public UserDTO(String password, String username) {
+		if (password != null) {
+			this.password = password;
+		}
+		if (username != null) {
+			this.username = username;
+		}
+	}
+	
 
 	public String getEmail() {
 		return email;
@@ -56,6 +69,13 @@ public class UserDTO {
 		this.password = password;
 	}
 	
+	public String getUsername(){
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	
 	
 	

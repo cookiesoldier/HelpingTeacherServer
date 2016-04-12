@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import dtos.UserJSON;
+import dtos.UserDTO;
 import firebaseConn.FirebaseConnection;
 import firebaseConn.IFirebaseConnection;
 
@@ -67,8 +67,8 @@ public class HTSservlet extends HttpServlet {
 			JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
 			if(receivedData.get("TASK").equals("CREATEUSER")){
-				UserJSON userjson = new UserJSON(receivedData.get("EMAIL").toString(), receivedData.get("FIRSTNAME").toString(), 
-													receivedData.get("LASTNAME").toString(), receivedData.get("PASSWORd").toString());
+				System.out.println(receivedData.toString());
+				UserDTO userjson = new UserDTO(receivedData.get("PASSONE").toString(),receivedData.get("USERNAME").toString());
 				IFirebaseConnection firebase = new FirebaseConnection();
 				firebase.createUser(userjson);
 			}
