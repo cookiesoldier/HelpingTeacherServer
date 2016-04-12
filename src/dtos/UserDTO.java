@@ -2,19 +2,26 @@ package dtos;
 
 import org.json.simple.JSONObject;
 
-public class UserJSON extends JSONObject {
+public class UserDTO {
 	
-	String email;
-	String firstname;
-	String lastname;
-	String password;
+	String email = " ";
+	String firstname = " ";
+	String lastname = " ";
+	String password = " ";
 	
-	public UserJSON(String email, String firstname, String lastname, String password) {
-		super();
-		this.email = email;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.password = password;
+	public UserDTO(String email, String firstname, String lastname, String password) {
+		if (email != null) {
+			this.email = email;
+		} 
+		if (firstname != null) {
+			this.firstname = firstname;
+		} 
+		if (lastname != null) {
+			this.lastname = lastname;
+		} 
+		if (password != null) {
+			this.password = password;
+		}
 	}
 
 	public String getEmail() {
