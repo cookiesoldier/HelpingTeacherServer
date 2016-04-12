@@ -30,42 +30,64 @@ public class FirebaseConn {
 	}
 	
 
-	public static  String firebaseCreateUser(JSONObject recievedData) throws UnsupportedEncodingException, JacksonUtilityException, FirebaseException {
+	public static FirebaseResponse firebaseCreateUser(JSONObject recievedData) throws UnsupportedEncodingException, JacksonUtilityException, FirebaseException {
 		
-		System.out.println("Test1");
-		FirebaseResponse response;
-		//Users Map --- Top Map
-		Map<String, Object> usersMap = new LinkedHashMap<String, Object>();
+		synchronized (firebase){
+		FirebaseResponse response = null;
 		//User map --- sub map
-		Map<String, Object> userMap = new LinkedHashMap<String, Object>();
-		//need to generate USERID - must be unique
-		//78.364.164.096 combinationer af user ID....
-		String userID = generateUserID();
-		System.out.println("Test2");
+		Map<String, Object> userMap = firebase.get("USERS").getBody();
+		//checker om brugeren findes allerede
+		if(userMap.get(recievedData.get("USERNAME")) == null){
 		//UserInfo map --- Sub sub Map
 		Map<String, Object> userInfoMap = new LinkedHashMap<String, Object>();
-		userInfoMap.put("USERNAME", recievedData.get("USERNAME"));
+		
 		userInfoMap.put("PASSWORD", recievedData.get("PASSONE"));
 		userInfoMap.put("EMAIL", "NULL");
 		userInfoMap.put("FIRSTNAME", "NULL");
 		userInfoMap.put("LASTNAME", "NULL");
 		//Tilføj RecievedData til userMap
-		System.out.println("Test3");
 		
-		userMap.put(userID, userInfoMap);
-		usersMap.put("USERS", userMap);
-		response = firebase.put("USERS", usersMap);
+		userMap.put((String) recievedData.get("USERNAME"), userInfoMap);
 		
 		
-		System.out.println("Test4");
-		System.out.println(response.toString());
-		return response.toString();
+		//check if exists
+		
+		System.out.println("usermapGet:"+userMap.get(recievedData.get("USERNAME")));
+		
+	
+			System.out.println("Updating");
+			response = firebase.put("USERS", userMap);
+		}else{
+			response = new FirebaseResponse(false, 404, null, null);
+		}
+		
+		
+		return response;
+		}
 		
 		
 	}
 	
 	
 	
+	private static boolean checkUserExist(String string) throws UnsupportedEncodingException, FirebaseException {
+		String Userpath = "USERS";
+		FirebaseResponse response = null;
+		
+		response = firebase.get(Userpath);
+		
+		//System.out.println("checkusers" +response.toString());
+		return false;
+	}
+	
+	private static void getUsers(){
+		
+		
+		
+	}
+
+
+
 	public static String generateUserID(){
 		String userID = "";
 		//Generate a userID
