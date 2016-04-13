@@ -67,6 +67,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 		    }
 		});
 		while(!done.get()){
+			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
 			//derp derp sikke en løsning!
 		};
 		
@@ -80,8 +81,47 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	@Override
 	public boolean authUser(UserDTO user) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		Firebase usersRef = ref.child("users");
+		
+		
+		final AtomicBoolean done = new AtomicBoolean(false);
+		final AtomicBoolean succes = new AtomicBoolean(false);
+		
+		usersRef.child(user.getUsername()).addListenerForSingleValueEvent(new ValueEventListener() {
+		    @Override
+		    public void onDataChange(DataSnapshot snapshot) {
+		    	
+		    	if(!snapshot.hasChildren()){
+					System.out.println("Someone tried to login with: Login:"+user.getUsername()+ " Pass:"+user.getPassword());
+					
+					succes.set(false);
+					done.set(true);
+					
+					
+				}else{
+					System.out.println(snapshot.getChildren());
+//					if(){
+//						
+//					}
+					System.out.println("found one name:"+user.getUsername());
+					succes.set(false);
+					done.set(true);
+				
+					
+				}
+		    }
+		    @Override
+		    public void onCancelled(FirebaseError firebaseError) {
+		    }
+		});
+		while(!done.get()){
+			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
+			//derp derp sikke en løsning!
+		};
+		
+		return succes.get();
+		
 	}
 
 	@Override
