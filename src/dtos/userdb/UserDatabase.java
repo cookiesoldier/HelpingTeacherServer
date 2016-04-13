@@ -13,8 +13,8 @@ public class UserDatabase {
    public UserDatabase() {
       try {
          Class.forName("org.sqlite.JDBC");
-         c = DriverManager.getConnection("jdbc:sqlite:usertest.db");
-         System.out.println("Opened database successfully");
+         c = DriverManager.getConnection("jdbc:sqlite:usertaxest.db");
+
 
       } catch ( Exception e ) {
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -38,7 +38,12 @@ public class UserDatabase {
       PreparedStatement ps;
       String sql = "INSERT INTO user (" +
             "username, firstname, lastname, email, password)" +
-            "VALUES (?, ?, ?, ?, ?);";
+            "VALUES (?,?,?,?,?);";
+      String sql1 = "INSERT INTO user (" +
+            "username, firstname, lastname, email, password)" +
+            "VALUES ('hvemerdu', 'hvemerjeg', 'hvorerjeg'," +
+            " 'hvaderjeg', 'hvaderdu');";
+
       try {
          c.setAutoCommit(false);
          ps = c.prepareStatement(sql);
