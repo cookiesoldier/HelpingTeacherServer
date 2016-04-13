@@ -24,7 +24,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	@Override
 	public boolean createUser(UserDTO user) {
-		
+
 		Firebase usersRef = ref.child("users");
 		
 		Map<String, Object> userInfoMap = new HashMap<String,  Object>();
@@ -68,7 +68,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 		});
 		while(!done.get()){
 			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
-			//derp derp sikke en løsning!
+			//derp derp sikke en lï¿½sning!
 		};
 		
 		return succes.get();
@@ -117,7 +117,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 		});
 		while(!done.get()){
 			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
-			//derp derp sikke en løsning!
+			//derp derp sikke en lï¿½sning!
 		};
 		
 		return succes.get();
