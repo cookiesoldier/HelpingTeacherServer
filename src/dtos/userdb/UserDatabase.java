@@ -14,13 +14,19 @@ public class UserDatabase implements IUserDatabase {
 
    public UserDatabase() {
       try {
-         Class.forName("org.sqlite.JDBC");
-         c = DriverManager.getConnection("jdbc:sqlite:hts_db.sqlite");
+         Class.forName("com.mysql.jdbc.Driver").newInstance();
+         String username = "admin";
+         String password = "gruppe5";
+         c = DriverManager.getConnection("jdbc:mysql://localhost:3306/tas_db/" +
+               "user=admin&password=gruppe5&useSSL=false");
+         if(c == null) System.out.println("Der er ingen connection");
+         else System.out.println("Der er connection, tror jeg.");
 
+         //c.
 
       } catch ( Exception e ) {
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-         System.exit(0);
+         //System.exit(0);
       }
 
    }
@@ -41,10 +47,12 @@ public class UserDatabase implements IUserDatabase {
       String sql = "INSERT INTO user (" +
             "username, firstname, lastname, email, password)" +
             "VALUES (?,?,?,?,?);";
+      /*
       String sql1 = "INSERT INTO user (" +
             "username, firstname, lastname, email, password)" +
             "VALUES ('hvemerdu', 'hvemerjeg', 'hvorerjeg'," +
             " 'hvaderjeg', 'hvaderdu');";
+      */
 
       try {
          c.setAutoCommit(false);
