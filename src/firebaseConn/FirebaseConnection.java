@@ -14,7 +14,7 @@ import com.firebase.client.ValueEventListener;
 
 import dtos.UserDTO;
 
-public class FirebaseConnection implements IFirebaseConnection {
+public class FirebaseConnection implements IUserDatabase {
 
 	Firebase ref;
 
@@ -80,7 +80,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 	}
 
 	@Override
-	public boolean authUser(UserDTO user) {
+	public boolean authUser(String username, String password) {
 		
 		Firebase usersRef = ref.child("users");
 		
@@ -88,12 +88,12 @@ public class FirebaseConnection implements IFirebaseConnection {
 		final AtomicBoolean done = new AtomicBoolean(false);
 		final AtomicBoolean succes = new AtomicBoolean(false);
 		
-		usersRef.child(user.getUsername()).addListenerForSingleValueEvent(new ValueEventListener() {
+		usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
 		    @Override
 		    public void onDataChange(DataSnapshot snapshot) {
 		    	
 		    	if(!snapshot.hasChildren()){
-					System.out.println("Someone tried to login with: Login:"+user.getUsername()+ " Pass:"+user.getPassword());
+					System.out.println("Someone tried to login with: Login:"+username+ " Pass:"+password);
 					
 					succes.set(false);
 					done.set(true);
@@ -104,7 +104,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 //					if(){
 //						
 //					}
-					System.out.println("found one name:"+user.getUsername());
+					System.out.println("found one name:"+username);
 					succes.set(false);
 					done.set(true);
 				

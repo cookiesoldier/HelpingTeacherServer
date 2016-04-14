@@ -1,8 +1,9 @@
 package dtos;
 
 
+import java.io.Serializable;
 
-public class UserDTO {
+public class UserDTO implements Serializable {
 	
 	String username = " ";
 	String email = " ";
@@ -68,12 +69,15 @@ public class UserDTO {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	
-	
 
-	
-	
-	
-
+	@Override
+	public String toString() {
+		return "UserDTO{" +
+				"username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", password='" + password + '\'' +
+				'}';
+	}
 }

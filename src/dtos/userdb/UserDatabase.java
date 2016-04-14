@@ -3,17 +3,19 @@ package dtos.userdb;
 import java.sql.*;
 
 import dtos.UserDTO;
+import firebaseConn.IUserDatabase;
+import org.json.simple.JSONObject;
 
 /**
  * Created by Thomas on 13-04-2016.
  */
-public class UserDatabase {
+public class UserDatabase implements IUserDatabase {
    private Connection c = null;
 
    public UserDatabase() {
       try {
          Class.forName("org.sqlite.JDBC");
-         c = DriverManager.getConnection("jdbc:sqlite:usertaxest.db");
+         c = DriverManager.getConnection("jdbc:sqlite:hts_db.sqlite");
 
 
       } catch ( Exception e ) {
@@ -60,6 +62,31 @@ public class UserDatabase {
          return false;
       }
       return true;
+   }
+
+   @Override
+   public boolean authUser(String username, String password) {
+      return false;
+   }
+
+   @Override
+   public UserDTO getUser(String name) {
+      return null;
+   }
+
+   @Override
+   public JSONObject userToJSON(UserDTO user) {
+      return null;
+   }
+
+   @Override
+   public UserDTO JSONtoUser(JSONObject obj) {
+      return null;
+   }
+
+   @Override
+   public boolean isJSONObjectUser(JSONObject obj) {
+      return false;
    }
 
 }

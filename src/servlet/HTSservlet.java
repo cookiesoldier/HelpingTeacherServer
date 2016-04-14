@@ -16,7 +16,7 @@ import org.json.simple.parser.ParseException;
 
 import dtos.UserDTO;
 import firebaseConn.FirebaseConnection;
-import firebaseConn.IFirebaseConnection;
+import firebaseConn.IUserDatabase;
 
 
 
@@ -56,9 +56,11 @@ public class HTSservlet extends HttpServlet {
 		boolean check = false;
     	if(receivedData.get("TASK").equals("loginauth")){
     		System.out.println(receivedData.toString());
-    		UserDTO userjson = new UserDTO(receivedData.get("PASSWORD").toString(),receivedData.get("USERNAME").toString());
-			IFirebaseConnection firebase = new FirebaseConnection();
-			 check = firebase.authUser(userjson);
+			String username = receivedData.get("PASSWORD").toString();
+			String password = receivedData.get("USERNAME").toString();
+    		UserDTO userjson = new UserDTO(username, password);
+			IUserDatabase firebase = new FirebaseConnection();
+			 check = firebase.authUser(username, password);
     	}
     	OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
     	if(!check){
@@ -103,7 +105,7 @@ public class HTSservlet extends HttpServlet {
 			if(receivedData.get("TASK").equals("CREATEUSER")){
 				//System.out.println(receivedData.toString());
 				UserDTO userjson = new UserDTO(receivedData.get("PASSONE").toString(),receivedData.get("USERNAME").toString());
-				IFirebaseConnection firebase = new FirebaseConnection();
+				IUserDatabase firebase = new FirebaseConnection();
 				firebase.createUser(userjson);
 			}
 		
