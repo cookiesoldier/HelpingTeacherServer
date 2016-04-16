@@ -9,8 +9,18 @@ public class UserDTO {
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
-
-
+	
+	public UserDTO() {
+		
+	}
+	/**
+	 * 
+	 * @param username
+	 * @param email
+	 * @param firstname
+	 * @param lastname
+	 * @param password
+	 */
 	public UserDTO(String username, String email, String firstname, String lastname, String password) {
 		if (username != null) this.username = username;
 		if (email != null) this.email = email;
@@ -26,6 +36,12 @@ public class UserDTO {
 		if (username != null) {
 			this.username = username;
 		}
+	}
+	
+	public String toString() {
+		String str = "{ username: "+username+", email: "+email+", "
+				+ "firstname: "+firstname+", lastname: "+lastname+" }";
+		return str;
 	}
 	
 
