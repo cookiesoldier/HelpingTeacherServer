@@ -15,7 +15,7 @@ import com.firebase.client.ValueEventListener;
 
 import dtos.UserDTO;
 
-public class FirebaseConnection implements IFirebaseConnection {
+public class FirebaseConnection implements IUserDatabase {
 
 	Firebase ref;
 
@@ -25,7 +25,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	@Override
 	public boolean createUser(UserDTO user) {
-		
+
 		Firebase usersRef = ref.child("users");
 		
 		Map<String, Object> userInfoMap = new HashMap<String,  Object>();
@@ -64,6 +64,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 		    }
 		});
 		while(!done.get()){
+
 			//derp derp sikke en l�sning!
 		};
 		
@@ -73,9 +74,48 @@ public class FirebaseConnection implements IFirebaseConnection {
 	}
 
 	@Override
-	public boolean authUser(UserDTO user) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean authUser(String username, String password) {
+		
+		Firebase usersRef = ref.child("users");
+		
+		
+		final AtomicBoolean done = new AtomicBoolean(false);
+		final AtomicBoolean succes = new AtomicBoolean(false);
+		
+		usersRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+		    @Override
+		    public void onDataChange(DataSnapshot snapshot) {
+		    	
+		    	if(!snapshot.hasChildren()){
+					System.out.println("Someone tried to login with: Login:"+username+ " Pass:"+password);
+					
+					succes.set(false);
+					done.set(true);
+					
+					
+				}else{
+					System.out.println(snapshot.getChildren());
+//					if(){
+//						
+//					}
+					System.out.println("found one name:"+username);
+					succes.set(false);
+					done.set(true);
+				
+					
+				}
+		    }
+		    @Override
+		    public void onCancelled(FirebaseError firebaseError) {
+		    }
+		});
+		while(!done.get()){
+			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
+			//derp derp sikke en l�sning!
+		};
+		
+		return succes.get();
+		
 	}
 
 	@Override
