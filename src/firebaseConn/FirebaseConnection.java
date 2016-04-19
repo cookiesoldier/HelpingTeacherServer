@@ -100,11 +100,11 @@ public class FirebaseConnection implements IFirebaseConnection {
 					
 					
 				}else{
+					
+					
 					System.out.println(snapshot.getChildren());
-//					if(){
-//						
-//					}
 					System.out.println("found one name:"+user.getUsername());
+					
 					succes.set(false);
 					done.set(true);
 				
