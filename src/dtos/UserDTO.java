@@ -1,16 +1,27 @@
 package dtos;
 
 
+import java.io.Serializable;
 
-public class UserDTO {
+public class UserDTO implements Serializable {
 	
 	String username = " ";
 	String email = " ";
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
-
-
+	
+	public UserDTO() {
+		
+	}
+	/**
+	 * 
+	 * @param username
+	 * @param email
+	 * @param firstname
+	 * @param lastname
+	 * @param password
+	 */
 	public UserDTO(String username, String email, String firstname, String lastname, String password) {
 		if (username != null) this.username = username;
 		if (email != null) this.email = email;
@@ -26,6 +37,12 @@ public class UserDTO {
 		if (username != null) {
 			this.username = username;
 		}
+	}
+	
+	public String toString() {
+		String str = "{ username: "+username+", email: "+email+", "
+				+ "firstname: "+firstname+", lastname: "+lastname+" }";
+		return str;
 	}
 	
 
@@ -68,12 +85,15 @@ public class UserDTO {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	
-	
 
-	
-	
-	
-
+	@Override
+	public String toString() {
+		return "UserDTO{" +
+				"username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				", password='" + password + '\'' +
+				'}';
+	}
 }
