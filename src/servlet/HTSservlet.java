@@ -114,7 +114,7 @@ public class HTSservlet extends HttpServlet {
 			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 			
 			
-			if(succes){
+			if(!succes){
 				writer.write("CONNECTION TO FIREBASE FAILED");
 			}else{
 				writer.write("CONNECTION TO FIREBASE SUCCES");

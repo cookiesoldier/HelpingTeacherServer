@@ -71,13 +71,14 @@ public class FirebaseConnection implements IFirebaseConnection {
 			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
 			//derp derp sikke en løsning!
 			try {
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		System.out.println("Pre return");
+		System.out.println(succes.get());
 		return succes.get();
 		
 		
