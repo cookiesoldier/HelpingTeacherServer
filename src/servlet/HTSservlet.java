@@ -37,7 +37,9 @@ public class HTSservlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    	System.out.println("doGet");
+    	response.getOutputStream().println("Hurray !! This Servlet Works");
+    	
     	try {
     	int length = request.getContentLength();
 		
@@ -66,7 +68,7 @@ public class HTSservlet extends HttpServlet {
 		}else{
 			writer.write("loginsucces");
 		}
-        response.getOutputStream().println("Hurray !! This Servlet Works");
+        
     	writer.flush();
 		writer.close();
 		}
@@ -84,6 +86,7 @@ public class HTSservlet extends HttpServlet {
     @SuppressWarnings("unused")
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+    	System.out.println("doPut");
 		try {
 			int length = request.getContentLength();
 			
@@ -100,15 +103,18 @@ public class HTSservlet extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 			//hent task:
+			boolean succes = false;
 			if(receivedData.get("TASK").equals("CREATEUSER")){
 				//System.out.println(receivedData.toString());
 				UserDTO userjson = new UserDTO(receivedData.get("PASSONE").toString(),receivedData.get("USERNAME").toString());
 				IFirebaseConnection firebase = new FirebaseConnection();
-				firebase.createUser(userjson);
+				 succes = firebase.createUser(userjson);
 			}
 		
 			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
-			if(response.getStatus() == 404){
+			
+			
+			if(succes){
 				writer.write("CONNECTION TO FIREBASE FAILED");
 			}else{
 				writer.write("CONNECTION TO FIREBASE SUCCES");

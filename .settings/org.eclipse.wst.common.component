@@ -2,6 +2,27 @@
     <wb-module deploy-name="HelpingTeacherServer2">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="jackson-all-1.9.9.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/jackson-all-1.9.9.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="log4j-1.2.16.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/log4j-1.2.16.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="httpclient-4.3.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/httpclient-4.3.6.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-logging-1.1.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/commons-logging-1.1.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="firebase-client-android-2.5.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/firebase-client-android-2.5.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="httpcore-4.3.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/httpcore-4.3.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="json_simple-1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/json_simple-1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="HelpingTeacherServer2"/>
         <property name="java-output-path" value="/HelpingTeacherServer2/build/classes"/>
     </wb-module>

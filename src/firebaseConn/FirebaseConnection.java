@@ -51,6 +51,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 					usersRef.updateChildren(users);
 					System.out.println("didnt find one name:"+user.getUsername());
 					succes.set(true);
+					done.set(true);
 					
 					
 					
@@ -69,8 +70,14 @@ public class FirebaseConnection implements IFirebaseConnection {
 		while(!done.get()){
 			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
 			//derp derp sikke en løsning!
-		};
-		
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Pre return");
 		return succes.get();
 		
 		
