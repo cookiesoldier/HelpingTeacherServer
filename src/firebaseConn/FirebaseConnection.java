@@ -13,9 +13,10 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import dtos.UserDTO;
+import log.LogMethods;
 
 public class FirebaseConnection implements IFirebaseConnection {
-
+	LogMethods logger = new LogMethods();
 	Firebase ref;
 
 	public FirebaseConnection() {
@@ -25,6 +26,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 	@Override
 	public boolean createUser(UserDTO user) {
 		
+		
 		Firebase usersRef = ref.child("users");
 		
 		Map<String, Object> userInfoMap = new HashMap<String,  Object>();
@@ -32,14 +34,10 @@ public class FirebaseConnection implements IFirebaseConnection {
 		userInfoMap.put("email", user.getEmail());
 		userInfoMap.put("firstname", user.getFirstname());
 		userInfoMap.put("lastname", user.getLastname());
-		System.out.println(user.getUsername());
-		System.out.println(user.getPassword());
-		
 		Map<String,  Object> users = new HashMap<String,  Object>();
 		users.put(user.getUsername(), userInfoMap);
 		
 		//check if user exists
-		
 		final AtomicBoolean done = new AtomicBoolean(false);
 		final AtomicBoolean succes = new AtomicBoolean(false);
 		
@@ -49,22 +47,25 @@ public class FirebaseConnection implements IFirebaseConnection {
 		    	
 		    	if(!snapshot.hasChildren()){
 					usersRef.updateChildren(users);
-					System.out.println("didnt find one name:"+user.getUsername());
+					//System.out.println("didnt find one name:"+user.getUsername());
 					succes.set(true);
 					done.set(true);
+					logger.printLog("CreationSucces user created:" + user.getUsername());
 					
 					
 					
 				}else{
-					System.out.println("found one name:"+user.getUsername());
+					//System.out.println("found one name:"+user.getUsername());
 					succes.set(false);
 					done.set(true);
-				
+					logger.printLog("CreationFailed user not created:" + user.getUsername());
 					
 				}
 		    }
 		    @Override
 		    public void onCancelled(FirebaseError firebaseError) {
+		    	
+		    	logger.printLog("Firebase error:" + firebaseError.getMessage());
 		    }
 		});
 		while(!done.get()){
@@ -77,8 +78,6 @@ public class FirebaseConnection implements IFirebaseConnection {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Pre return");
-		System.out.println(succes.get());
 		return succes.get();
 		
 		
@@ -101,31 +100,50 @@ public class FirebaseConnection implements IFirebaseConnection {
 		    public void onDataChange(DataSnapshot snapshot) {
 		    	
 		    	if(!snapshot.hasChildren()){
-					System.out.println("Someone tried to login with: Login:"+user.getUsername()+ " Pass:"+user.getPassword());
-					
+		    		
+		    
+					//System.out.println("Someone tried to login with: Login:"+user.getUsername()+ " Pass:"+user.getPassword());
+		    		logger.printLog("Failed to login with" + "Login:"+user.getUsername()+ " Pass:"+user.getPassword());
 					succes.set(false);
 					done.set(true);
 					
 					
 				}else{
-					System.out.println(snapshot.getChildren());
-//					if(){
-//						
-//					}
-					System.out.println("found one name:"+user.getUsername());
-					succes.set(false);
-					done.set(true);
+					//check if login info matches:
+					
+					System.out.println(snapshot.child("password"));
+					if(snapshot.child("password").equals(user.getPassword())){
+						//passwordMatch!
+						logger.printLog("Succesfully logged in with" + "Login:"+user.getUsername()+ " Pass:"+user.getPassword());
+						succes.set(true);
+						done.set(true);
+						
+					}else{
+						//password Mismatch!
+						logger.printLog("Failed To login password mismatch!: " + "Login:"+user.getUsername()+ " Pass:"+user.getPassword());
+						succes.set(false);
+						done.set(true);
+					}
+					
 				
 					
 				}
 		    }
 		    @Override
 		    public void onCancelled(FirebaseError firebaseError) {
+		    	
+		    	logger.printLog("Firebase error:" + firebaseError.getMessage());
 		    }
 		});
 		while(!done.get()){
 			//http://stackoverflow.com/questions/26092632/java-firebase-delay-exit-until-writes-finish
 			//derp derp sikke en løsning!
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		};
 		
 		return succes.get();
