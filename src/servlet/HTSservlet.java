@@ -60,7 +60,7 @@ public class HTSservlet extends HttpServlet {
     		System.out.println(receivedData.toString());
     		UserDTO userjson = new UserDTO(receivedData.get("PASSWORD").toString(),receivedData.get("USERNAME").toString());
 			IFirebaseConnection firebase = new FirebaseConnection();
-			 check = firebase.authUser(userjson);
+			check = firebase.authUser(userjson);
     	}
     	OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
     	if(!check){
