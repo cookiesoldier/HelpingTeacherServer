@@ -32,6 +32,7 @@ public class HTSservlet extends HttpServlet {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -44,17 +45,21 @@ public class HTSservlet extends HttpServlet {
 			if (paramValue != null) {
 
 				String recievedString = new String(paramValue);
-				System.out.println(recievedString);
+				// System.out.println(recievedString);
 				JSONParser parser = new JSONParser();
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
-				if(receivedData != null){
-				if (receivedData.get("TASK").equals("loginauth")) {
-					System.out.println(receivedData.toString());
-					UserDTO userjson = new UserDTO(receivedData.get("PASSWORD").toString(),
-							receivedData.get("USERNAME").toString());
-					IFirebaseConnection firebase = new FirebaseConnection();
-					check = firebase.authUser(userjson);
-				}}
+				if (receivedData != null) {
+					if (receivedData.get("TASK").equals("loginauth")) {
+						//System.out.println(receivedData.toString());
+						UserDTO userjson = new UserDTO(receivedData.get("PASSWORD").toString(),
+								receivedData.get("USERNAME").toString());
+						IFirebaseConnection firebase = new FirebaseConnection();
+						check = firebase.authUser(userjson);
+						
+					}else if(receivedData.get("TASK").equals("????")){
+						
+					}
+				}
 			} else {
 				check = false;
 			}
