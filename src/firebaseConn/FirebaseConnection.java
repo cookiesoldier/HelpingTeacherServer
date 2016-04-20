@@ -112,7 +112,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 					//check if login info matches:
 					
 					System.out.println(snapshot.child("password"));
-					if(snapshot.child("password").equals(user.getPassword())){
+					if(snapshot.child("password").getValue().equals(user.getPassword())){
 						//passwordMatch!
 						logger.printLog("Succesfully logged in with" + "Login:"+user.getUsername()+ " Pass:"+user.getPassword());
 						succes.set(true);

@@ -38,21 +38,18 @@ public class HTSservlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	System.out.println("doGet");
-    	response.getOutputStream().println("Hurray !! This Servlet Works");
-    	
+    	//response.getOutputStream().println("Hurray !! This Servlet Works");
+    	String paramName = "param1";
+        String paramValue = request.getParameter(paramName);
+        System.out.println(paramValue);
+        String Uri = request.getRequestURL()+"?"+request.getQueryString();
+        System.out.println("URI:" +Uri);
     	try {
     	int length = request.getContentLength();
 		
-		if(length > 0){
-		byte[] input = new byte[length];
-		ServletInputStream sin = request.getInputStream();
-		int c, count = 0;
-		while ((c = sin.read(input, count, input.length - count)) != -1) {
-			count += c;
-		}
-		sin.close();
-
-		String recievedString = new String(input);
+	
+		String recievedString = new String(paramValue);
+		System.out.println(recievedString);
 		JSONParser parser = new JSONParser();
 		JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 		boolean check = false;
@@ -71,7 +68,7 @@ public class HTSservlet extends HttpServlet {
         
     	writer.flush();
 		writer.close();
-		}
+		
     	}catch (IOException | ParseException e) {
     		try {
     	
@@ -149,10 +146,10 @@ public class HTSservlet extends HttpServlet {
  
             String recievedString = new String(input);
             response.setStatus(HttpServletResponse.SC_OK);
-            System.out.println(recievedString);
+            System.out.println("doPost" +recievedString);
             OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
             
- 
+            
             writer.write("Succes");
             writer.flush();
             writer.close();
