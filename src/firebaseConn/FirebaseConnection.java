@@ -107,7 +107,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 					succes.set(false);
 					done.set(true);
 					
-					
+				
 				}else{
 					//check if login info matches:
 					

@@ -33,7 +33,7 @@ public class LogMethods {
 			try {
 				//System.out.println("fileExists!"+ tmp.getAbsolutePath());
 				tmp.createNewFile();
-				Thread.sleep(2000);
+				Thread.sleep(20);
 			} catch (IOException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -41,10 +41,12 @@ public class LogMethods {
 			
 		}
 		
-		String text = timeStamp() +"  "+ action;
+		String text = timeStamp() +":  "+ action+"\n";
 		
 		try {
 		    Files.write(Paths.get("tmp/test/serverLog.txt"), text.getBytes(), StandardOpenOption.APPEND);
+
+		    
 		    worked = true;
 		}catch (IOException e) {
 		    e.printStackTrace();
