@@ -27,7 +27,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 	public FirebaseConnection() {
 		ref = new Firebase("https://helpingteach.firebaseio.com/");
 	}
-
+@Override
 	public boolean createAnswer(AnswerDTO answer) {
 		Firebase answerRef = ref.child("answers");
 
@@ -83,7 +83,8 @@ public class FirebaseConnection implements IFirebaseConnection {
 		return succes.get();
 
 	}
-
+	
+	@Override
 	public boolean createEvent(EventDTO event) {
 
 		Firebase eventRef = ref.child("events");
@@ -141,6 +142,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	}
 
+	@Override
 	public boolean createQuestion(QuestionDTO question) {
 
 		Firebase questionRef = ref.child("questions");
@@ -197,6 +199,7 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	}
 
+	@Override
 	public boolean createRoom(RoomDTO room) {
 
 		Firebase roomRef = ref.child("rooms");
@@ -253,7 +256,8 @@ public class FirebaseConnection implements IFirebaseConnection {
 
 	}
 
-	public boolean createRoomUser( RoomUserDTO roomuser){
+	@Override
+	public boolean createRoomUser(RoomUserDTO roomuser){
 		
 		Firebase roomuserRef = ref.child("roomusers");
 
@@ -485,6 +489,109 @@ public class FirebaseConnection implements IFirebaseConnection {
 		} else
 			return false;
 		return true;
+	}
+	
+	
+	
+	
+	@Override
+	public boolean deleteRoom(RoomDTO room) {
+		
+		Firebase roomRef = ref.child("rooms");
+		roomRef.child(room.getRoomKey()).removeValue();
+		
+		//check if value is removed:
+		
+		
+		
+		
+		
+		return false;
+	}
+	@Override
+	public boolean deleteEvent(EventDTO event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean deleteQuestion(QuestionDTO question) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean deleteAnswers(AnswerDTO answer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean deleteRoomUser(RoomUserDTO roomuser) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean deleteUser(UserDTO user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateRoom(RoomDTO room) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateEvent(EventDTO event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateQuestion(QuestionDTO question) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateAnswers(AnswerDTO answer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateRoomUser(RoomUserDTO roomuser) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean updateUser(UserDTO user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getRoom(RoomDTO room) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getEvent(EventDTO event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getQuestion(QuestionDTO question) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getAnswers(AnswerDTO answer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getRoomUser(RoomUserDTO roomuser) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean getUser(UserDTO user) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
