@@ -2,6 +2,8 @@ package dtos;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDTO implements Serializable {
 	
@@ -10,6 +12,8 @@ public class UserDTO implements Serializable {
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
+	
+	List<String> rooms = new ArrayList<>();
 	
 	public UserDTO() {
 		
@@ -30,7 +34,9 @@ public class UserDTO implements Serializable {
 		if (password != null) this.password = password;
 
 	}
-	public UserDTO(String password, String username) {
+	
+	@Deprecated
+	public UserDTO(String username, String password) {
 		if (password != null) {
 			this.password = password;
 		}
@@ -39,11 +45,11 @@ public class UserDTO implements Serializable {
 		}
 	}
 	
-	public String toString() {
-		String str = "{ username: "+username+", email: "+email+", "
-				+ "firstname: "+firstname+", lastname: "+lastname+" }";
-		return str;
-	}
+//	public String toString() {
+//		String str = "{ username: "+username+", email: "+email+", "
+//				+ "firstname: "+firstname+", lastname: "+lastname+" }";
+//		return str;
+//	}
 	
 
 	public String getEmail() {

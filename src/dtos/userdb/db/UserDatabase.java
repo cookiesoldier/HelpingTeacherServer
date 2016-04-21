@@ -1,4 +1,4 @@
-package dtos.userdb;
+package dtos.userdb.db;
 
 import java.sql.*;
 

@@ -1,7 +1,7 @@
-package dtos.userdb.test;
+package dtos.userdb.db.test;
 
 import dtos.UserDTO;
-import dtos.userdb.UserDatabase;
+import dtos.userdb.db.UserDatabase;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

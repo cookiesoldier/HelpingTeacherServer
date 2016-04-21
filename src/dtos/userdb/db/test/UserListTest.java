@@ -1,17 +1,13 @@
 package dtos.userdb.db.test;
 
-import com.sun.rmi.rmid.ExecPermission;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import dtos.UserDTO;
 import dtos.userdb.db.UserList;
 import firebaseConn.IUserDatabase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.*;
-
+ 
 /**
  * Created by Thomas on 14-04-2016.
  */
