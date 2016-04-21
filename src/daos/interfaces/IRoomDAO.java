@@ -1,3 +1,4 @@
+
 package daos.interfaces;
 
 import dtos.RoomDTO;
@@ -13,3 +14,4 @@ public interface IRoomDAO {
 	RoomDTO getRoom(String roomKey);
 	
 }
+
