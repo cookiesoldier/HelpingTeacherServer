@@ -94,11 +94,12 @@ public class FirebaseConnection implements IUserDatabase {
 					
 					
 				}else{
+					
+					
 					System.out.println(snapshot.getChildren());
-//					if(){
-//						
-//					}
-					System.out.println("found one name:"+username);
+
+					System.out.println("found one name:"+user.getUsername());
+
 					succes.set(false);
 					done.set(true);
 				
