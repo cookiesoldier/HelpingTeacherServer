@@ -1,4 +1,4 @@
-package dtos.userdb.db;
+package lolgacy.userdb.db;
 
 import dtos.UserDTO;
 import firebaseConn.IUserDatabase;
