@@ -4,6 +4,8 @@ import daos.interfaces.IRoomDAO;
 import dtos.RoomDTO;
 
 public class RoomDAO implements IRoomDAO {
+	
+	
 
 	@Override
 	public boolean getRoom(RoomDTO room) {
