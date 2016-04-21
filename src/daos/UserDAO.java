@@ -1,4 +1,4 @@
-package daos.interfaces;
+package daos;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import daos.interfaces.IUserDAO;
 import dtos.UserDTO;
 
 public class UserDAO implements IUserDAO {
