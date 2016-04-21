@@ -18,29 +18,31 @@ public interface IUserDatabase {
 	
 	
 
-	boolean createUser(UserDTO user);
-	boolean createAnswer(AnswerDTO answer);
-	boolean createEvent(EventDTO event);
-	boolean createQuestion(QuestionDTO question);
-	boolean createRoom(RoomDTO room);
+
 	
 	
 	
-	boolean deleteRoom(RoomDTO room);
-	boolean deleteEvent(EventDTO event);
-	boolean deleteQuestion(QuestionDTO question);
-	boolean deleteAnswers(AnswerDTO answer);
-	boolean deleteUser(UserDTO user);
-	
-	boolean updateRoom(RoomDTO room);
-	boolean updateEvent(EventDTO event);
-	boolean updateQuestion(QuestionDTO question);
-	boolean updateAnswers(AnswerDTO answer);
-	boolean updateUser(UserDTO user);
 	
 	boolean getRoom(RoomDTO room);
+	boolean updateRoom(RoomDTO room);
+	boolean createRoom(RoomDTO room);
+	boolean deleteRoom(RoomDTO room);
+	boolean updateEvent(EventDTO event);
+	boolean createEvent(EventDTO event);
+	boolean deleteEvent(EventDTO event);
 	boolean getEvent(EventDTO event);
+	boolean updateQuestion(QuestionDTO question);
+	boolean createQuestion(QuestionDTO question);
+	boolean deleteQuestion(QuestionDTO question);
 	boolean getQuestion(QuestionDTO question);
+	boolean updateAnswers(AnswerDTO answer);
+	boolean createAnswer(AnswerDTO answer);
+	boolean deleteAnswers(AnswerDTO answer);
 	boolean getAnswers(AnswerDTO answer);
+	boolean updateUser(UserDTO user);
+	boolean createUser(UserDTO user);
+	boolean deleteUser(UserDTO user);
 	boolean getUser(UserDTO user);
+	
+	
 }
