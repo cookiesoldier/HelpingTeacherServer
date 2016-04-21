@@ -1,7 +1,7 @@
-package dtos.userdb.test;
+package lolgacy.userdb.test;
 
 import dtos.UserDTO;
-import dtos.userdb.UserDatabase;
+import lolgacy.UserDatabase;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

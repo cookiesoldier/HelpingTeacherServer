@@ -1,8 +1,8 @@
 package helper;
 
 import dtos.UserDTO;
-import dtos.userdb.db.UserList;
 import firebaseConn.IUserDatabase;
+import lolgacy.userdb.db.UserList;
 
 public class PasswordTest {
 	

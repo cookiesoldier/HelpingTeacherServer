@@ -1,8 +1,8 @@
-package dtos.userdb.db.test;
+package lolgacy.userdb.db.test;
 
 import dtos.UserDTO;
-import dtos.userdb.UserDatabase;
 import firebaseConn.IUserDatabase;
+import lolgacy.UserDatabase;
 
 /**
  * Created by Thomas on 14-04-2016.

@@ -1,5 +1,9 @@
-package dtos.userdb.db;
+package lolgacy.userdb.db;
 
+import dtos.AnswerDTO;
+import dtos.EventDTO;
+import dtos.QuestionDTO;
+import dtos.RoomDTO;
 import dtos.UserDTO;
 import firebaseConn.IUserDatabase;
 import org.json.simple.JSONObject;
@@ -112,4 +116,118 @@ public class UserList implements IUserDatabase {
          System.out.println(u.toString());
       }
    }
+
+@Override
+public boolean getRoom(RoomDTO room) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean updateRoom(RoomDTO room) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean createRoom(RoomDTO room) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteRoom(RoomDTO room) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean updateEvent(EventDTO event) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean createEvent(EventDTO event) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteEvent(EventDTO event) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean getEvent(EventDTO event) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean updateQuestion(QuestionDTO question) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean createQuestion(QuestionDTO question) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteQuestion(QuestionDTO question) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean getQuestion(QuestionDTO question) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean updateAnswers(AnswerDTO answer) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean createAnswer(AnswerDTO answer) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteAnswers(AnswerDTO answer) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean getAnswers(AnswerDTO answer) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean updateUser(UserDTO user) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean deleteUser(UserDTO user) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+@Override
+public boolean getUser(UserDTO user) {
+	// TODO Auto-generated method stub
+	return false;
+}
 }
