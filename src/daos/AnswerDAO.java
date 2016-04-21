@@ -1,34 +1,32 @@
 package daos;
 
-import daos.interfaces.IRoomDAO;
-import dtos.RoomDTO;
+import daos.interfaces.IAnswerDAO;
+import dtos.AnswerDTO;
 
-public class RoomDAO implements IRoomDAO {
+public class AnswerDAO implements IAnswerDAO {
 
 	@Override
-	public boolean getRoom(RoomDTO room) {
+	public boolean updateAnswers(AnswerDTO answer) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean updateRoom(RoomDTO room) {
+	public boolean createAnswer(AnswerDTO answer) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean createRoom(RoomDTO room) {
+	public boolean deleteAnswers(AnswerDTO answer) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteRoom(RoomDTO room) {
+	public boolean getAnswers(AnswerDTO answer) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	
-	
 }
