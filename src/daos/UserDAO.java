@@ -12,10 +12,12 @@ import java.util.List;
 
 import daos.interfaces.IUserDAO;
 import dtos.UserDTO;
+import helper.Password;
 
 public class UserDAO implements IUserDAO {
 	
 	 private List<UserDTO> users;
+	 
 	 private static final String DIR = "data/users"; 
 	 
 	 
@@ -47,6 +49,13 @@ public class UserDAO implements IUserDAO {
 	   @Override
 	   public boolean createUser(UserDTO user) {
 	      if(getUser(user.getUsername()) != null) return false;
+	      try {
+			String hashedPassword = Password.getSaltedHash(user.getPassword());
+			user.setPassword(hashedPassword);
+	      } catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+	      }
 	      users.add(user);
 	      System.out.println("User added to list");
 	      try {
@@ -82,9 +91,13 @@ public class UserDAO implements IUserDAO {
 	         if(u.getUsername().equals(username)) {
 	            System.out.println("User "+username+" found.");
 	            if(u.getPassword().equals(password)){
-	               System.out.println("Password matches.");
-	               return true;
-	            } else return false;
+	               try {
+					return Password.check(password, u.getPassword());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            } 
 	         }
 	      } return false;
 	   }

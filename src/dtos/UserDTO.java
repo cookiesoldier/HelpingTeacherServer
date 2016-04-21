@@ -2,6 +2,8 @@ package dtos;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDTO implements Serializable {
 	
@@ -10,6 +12,10 @@ public class UserDTO implements Serializable {
 	String firstname = " ";
 	String lastname = " ";
 	String password = " ";
+	
+	List<RoomDTO> subscribedRooms = new ArrayList<>();
+	
+	
 	
 	public UserDTO() {
 		
