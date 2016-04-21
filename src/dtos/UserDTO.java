@@ -30,19 +30,15 @@ public class UserDTO implements Serializable {
 		if (password != null) this.password = password;
 
 	}
-	public UserDTO(String password, String username) {
+	
+	@Deprecated
+	public UserDTO(String username, String password) {
 		if (password != null) {
 			this.password = password;
 		}
 		if (username != null) {
 			this.username = username;
 		}
-	}
-	
-	public String toString() {
-		String str = "{ username: "+username+", email: "+email+", "
-				+ "firstname: "+firstname+", lastname: "+lastname+" }";
-		return str;
 	}
 	
 
