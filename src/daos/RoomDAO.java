@@ -40,14 +40,18 @@ public class RoomDAO implements IRoomDAO {
 
 	@Override
 	public RoomDTO getRoom(String roomKey) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		 for(RoomDTO u : rooms) {
+	         if(u.getRoomKey().equals(roomKey)) return u;
+	      }
+	      return null;
+	   }
+	
 
 	@Override
-	public RoomDTO updateRoom(RoomDTO room) {
-		// TODO Auto-generated method stub
-		return new RoomDTO("", "", "", "");
+	public RoomDTO updateRoom(RoomDTO oldRoom, RoomDTO newRoom) {
+		int roomNr = rooms.indexOf(oldRoom);
+		rooms.add(roomNr, newRoom);
+		return rooms.get(roomNr);
 	}
 
 	@Override
@@ -55,7 +59,12 @@ public class RoomDAO implements IRoomDAO {
 	     if(getRoom(room.getRoomKey()) != null) return false;
 	      rooms.add(room);
 	      System.out.println("room added to list");
-	      try {
+	      updateRoomFile();
+	      return true;
+	   }
+
+	public void updateRoomFile() {
+		try {
 	         FileOutputStream fout = new FileOutputStream(DIR+"/rooms.ser");
 	         ObjectOutputStream oout = new ObjectOutputStream(fout);
 	         oout.writeObject(rooms);
@@ -67,14 +76,18 @@ public class RoomDAO implements IRoomDAO {
 	         e.printStackTrace();
 
 	      }
-	      return true;
-	   }
+	}
 	
 
 	@Override
 	public boolean deleteRoom(RoomDTO room) {
-		// TODO Auto-generated method stub
-		return false;
+		if(rooms.remove(room)){
+			updateRoomFile();
+			return true;
+		}else{
+			return false;
+		}
+	
 	}
 
 	
