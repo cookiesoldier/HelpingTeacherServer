@@ -15,10 +15,12 @@ import dtos.UserDTO;
 public class UserDAO implements IUserDAO {
 	
 	 private List<UserDTO> users;
-	
+	 private static final String DIR = "data/users"; 
+	 
+	 
 	public UserDAO() {
 	      try {
-	         FileInputStream fin = new FileInputStream(new File("WebContent/test/users.ser"));
+	         FileInputStream fin = new FileInputStream(new File(DIR+"/users.ser"));
 	         ObjectInputStream oin = new ObjectInputStream(fin);
 	         users = (ArrayList<UserDTO>) oin.readObject();
 	         oin.close();
@@ -28,6 +30,10 @@ public class UserDAO implements IUserDAO {
 	         users = new ArrayList<>();
 	         System.out.println("No list found. A new list has been created.");
 	         e.printStackTrace();
+	         
+	         //creates the directory
+	         File dir = new File(DIR);
+	         dir.mkdirs();
 	      }
 	   }
 
@@ -43,14 +49,14 @@ public class UserDAO implements IUserDAO {
 	      users.add(user);
 	      System.out.println("User added to list");
 	      try {
-	         FileOutputStream fout = new FileOutputStream("WebContent/test/users.ser");
+	         FileOutputStream fout = new FileOutputStream(DIR+"/users.ser");
 	         ObjectOutputStream oout = new ObjectOutputStream(fout);
 	         oout.writeObject(users);
 	         oout.close();
 	         fout.close();
-	         System.out.println("List was saved to disk.");
+	         System.out.println("UserList was saved to disk.");
 	      } catch (IOException e) {
-	         System.out.println("List could not be saved to disk.");
+	         System.out.println("UserList could not be saved to disk.");
 	         e.printStackTrace();
 
 	      }

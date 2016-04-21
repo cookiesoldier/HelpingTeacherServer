@@ -6,9 +6,10 @@ public interface IRoomDAO {
 
 
 	
-	boolean getRoom(RoomDTO room);
-	boolean updateRoom(RoomDTO room);
+
+	RoomDTO updateRoom(RoomDTO room);
 	boolean createRoom(RoomDTO room);
 	boolean deleteRoom(RoomDTO room);
+	RoomDTO getRoom(String roomKey);
 	
 }

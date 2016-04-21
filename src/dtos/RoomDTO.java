@@ -1,6 +1,8 @@
 package dtos;
 
-public class RoomDTO {
+import java.io.Serializable;
+
+public class RoomDTO implements Serializable {
 	
 	String roomKey = "";
 	String owner = "";
