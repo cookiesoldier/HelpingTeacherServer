@@ -1,6 +1,10 @@
 package daos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import daos.interfaces.IQuestionDAO;
+import dtos.AnswerDTO;
 import dtos.QuestionDTO;
 
 public class QuestionDAO implements IQuestionDAO {

@@ -1,42 +1,58 @@
 package dtos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 
 public class RoomDTO implements Serializable {
 	
 	String roomKey = "";
-	String owner = "";
-	String eventKeys = "";
+	UserDTO owner;
+	//String eventKeys = "";
 	String type = "";
+	
+	List<String> eventKeys = new ArrayList<>();
 
-
-	public RoomDTO(String roomKey, String owner, String eventKeys, String type) {
+	public RoomDTO(String roomKey, UserDTO owner, String type) {
 		super();
 		this.roomKey = roomKey;
 		this.owner = owner;
-		this.eventKeys = eventKeys;
 		this.type = type;
 	}
 
-
-	public Object getEventKeys() {
-		
-		return eventKeys;
+	public String getRoomKey() {
+		return roomKey;
 	}
 
-	public Object getOwner() {
-	
+	public void setRoomKey(String roomKey) {
+		this.roomKey = roomKey;
+	}
+
+	public UserDTO getOwner() {
 		return owner;
 	}
 
-	public Object getType() {
-		
+	public void setOwner(UserDTO owner) {
+		this.owner = owner;
+	}
+
+	public String getType() {
 		return type;
 	}
 
-	public String getRoomKey() {
-		
-		return roomKey;
+	public void setType(String type) {
+		this.type = type;
 	}
+
+	public List<String> getEventKeys() {
+		return eventKeys;
+	}
+	
+	
+	
 
 }

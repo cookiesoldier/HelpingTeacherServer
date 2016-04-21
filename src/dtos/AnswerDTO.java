@@ -2,40 +2,41 @@ package dtos;
 
 public class AnswerDTO {
 	
-	String answerKey = "";
-
-
-	String message = "";
-	String poster = "";
-	String timestamp = "";
+	String answerKey;
+	String body;
+	String timeStamp;
+	UserDTO sender;
 	
-
-	public AnswerDTO(String answerKey, String message, String poster, String timestamp) {
+	public AnswerDTO(String answerKey, String body, String timeStamp, UserDTO sender) {
 		super();
 		this.answerKey = answerKey;
-		this.message = message;
-		this.poster = poster;
-		this.timestamp = timestamp;
+		this.body = body;
+		this.timeStamp = timeStamp;
+		this.sender = sender;
 	}
 
 	public String getAnswerKey() {
-
 		return answerKey;
 	}
 
-	public Object getMessage() {
-	
-		return message;
+	public String getBody() {
+		return body;
 	}
 
-	public Object getPoster() {
-		
-		return poster;
+	public String getTimeStamp() {
+		return timeStamp;
 	}
 
-	public Object getTimestamp() {
-	
-		return timestamp;
+	public UserDTO getSender() {
+		return sender;
 	}
+
+	
+	
+	
+	
+	
+	
+
 
 }
