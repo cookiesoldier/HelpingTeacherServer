@@ -3,13 +3,14 @@ package dtos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 public class EventDTO {
 	
 	String title;
 	String timeStamp;
 	String eventKey;
-	
-	List<QuestionDTO> questions = new ArrayList<>();
+	List<String> questionkeys = new ArrayList<>();
 	
 
 	public EventDTO(String title, String timeStamp, String eventKey) {
@@ -19,12 +20,12 @@ public class EventDTO {
 		this.eventKey = eventKey;
 	}
 
-	public EventDTO(String title, String timeStamp, String eventKey, List<QuestionDTO> questions) {
+	public EventDTO(String title, String timeStamp, String eventKey, List<String> questions) {
 		super();
 		this.title = title;
 		this.timeStamp = timeStamp;
 		this.eventKey = eventKey;
-		this.questions = questions;
+		this.questionkeys = questions;
 	}
 
 	public String getTitle() {
@@ -35,12 +36,22 @@ public class EventDTO {
 		return timeStamp;
 	}
 
-	public List<QuestionDTO> getQuestions() {
-		return questions;
+	public List<String> getQuestions() {
+		return questionkeys;
 	}
 
 	public String getEventKey() {
 		return eventKey;
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject data = new JSONObject();
+		data.put("TITLE", title);
+		data.put("TIMESTAMP", timeStamp);
+		data.put("EVENTKEY", eventKey);
+		data.put("QUESTIONKEYS", questionkeys);
+
+		return data;
 	}
 	
 	

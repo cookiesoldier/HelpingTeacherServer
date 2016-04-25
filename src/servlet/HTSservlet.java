@@ -26,6 +26,7 @@ import daos.interfaces.IEventDAO;
 import daos.interfaces.IQuestionDAO;
 import daos.interfaces.IRoomDAO;
 import daos.interfaces.IUserDAO;
+import dtos.EventDTO;
 import dtos.UserDTO;
 
 /**
@@ -39,11 +40,11 @@ public class HTSservlet extends HttpServlet {
 	IQuestionDAO questionDAO = new QuestionDAO();
 	IRoomDAO roomDAO = new RoomDAO();
 	IUserDAO userDAO = new UserDAO();
-	//sessions, en given bruger ved login vil få en sessionID tilknyttet til login navnet, denne sessionID bruger til at bekræfte 
-	//hvem de er hvergang de vil lave en action udover login og create user
+	// sessions, en given bruger ved login vil få en sessionID tilknyttet til
+	// login navnet, denne sessionID bruger til at bekræfte
+	// hvem de er hvergang de vil lave en action udover login og create user
 	HashMap sessionMap = new HashMap();
-	//eksempel sessionMap.put("username", "sessionIDUnique");
-	
+	// eksempel sessionMap.put("username", "sessionIDUnique");
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -55,8 +56,7 @@ public class HTSservlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
+
 		// response.getOutputStream().println("Hurray !! This Servlet Works");
 		String paramName = "logininfo";
 		String paramValue = request.getParameter(paramName);
@@ -71,22 +71,23 @@ public class HTSservlet extends HttpServlet {
 				if (receivedData != null) {
 					if (receivedData.get("TASK").equals("loginauth")) {
 						// System.out.println(receivedData.toString());
-						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),receivedData.get("PASSWORD").toString());
+						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
+								receivedData.get("PASSWORD").toString());
 						boolean loginAuth = userDAO.authUser(user.getUsername(), user.getPassword());
-						
+
 						if (loginAuth) {
 							JSONObject reply = new JSONObject();
-							reply.put("REPLY","succes");
-							String sessionKey =sessionKeyGenerator();
+							reply.put("REPLY", "succes");
+							String sessionKey = sessionKeyGenerator();
 							reply.put("SESSIONKEY", sessionKey);
-							//save session in the sessionMap
+							// save session in the sessionMap
 							sessionMap.put(user.getUsername(), sessionKey);
-							
+
 							writer.write(reply.toString());
 						} else {
 							JSONObject reply = new JSONObject();
-							reply.put("REPLY","failed");
-							
+							reply.put("REPLY", "failed");
+
 							reply.put("SESSIONKEY", "NULL");
 							writer.write(reply.toString());
 						}
@@ -94,40 +95,51 @@ public class HTSservlet extends HttpServlet {
 					} else if (receivedData.get("TASK").equals("getuser")) {
 						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
 						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						//check who it is, if match to sessionKey do stuff, else reply error
-						if(sessionMapCheck(user.getUsername(), sessionKey)){
-							
-						UserDTO userFound = userDAO.getUser(user.getUsername());
-						JSONObject reply = new JSONObject();
-						reply.put("REPLY","succes");
-						reply.put("USER",userFound.toJSONObject());
-						//not done
-						}else{
+						// check who it is, if match to sessionKey do stuff,
+						// else reply error
+						if (sessionMapCheck(user.getUsername(), sessionKey)) {
+
+							UserDTO userFound = userDAO.getUser(receivedData.get("GETNAME").toString());
 							JSONObject reply = new JSONObject();
-							reply.put("REPLY","failed");
+							reply.put("REPLY", "succes");
+							reply.put("USER", userFound.toJSONObject());
+							writer.write(reply.toString());
+
+						} else {
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY", "failed");
 							reply.put("MESSAGE", "Sessionkey not matching");
 							writer.write(reply.toString());
-							
+
 						}
-						
 
-					}else if (receivedData.get("TASK").equals("getanswer")) {
+					} else if (receivedData.get("TASK").equals("getanswer")) {
 
-					}else if (receivedData.get("TASK").equals("getevent")) {
+					} else if (receivedData.get("TASK").equals("getevent")) {
+						String sessionKey = receivedData.get("SESSIONKEY").toString();
+						if (sessionMapCheck(receivedData.get("USERNAME").toString(), sessionKey)) {
+							EventDTO event = eventDAO.getEvent( receivedData.get("EVENTKEY").toString());
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY", "succes");
+							reply.put("EVENT",event.toJSONObject());
+							writer.write(reply.toString());
+							
+						} else {
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY", "failed");
+							reply.put("MESSAGE", "Sessionkey not matching");
+							writer.write(reply.toString());
 
-					}else if (receivedData.get("TASK").equals("getroom")) {
+						}
+					} else if (receivedData.get("TASK").equals("getroom")) {
 
-					
 					}
-				}else{
-					writer.write("Message recieved but not understood, message:"+receivedData.toString());
+				} else {
+					writer.write("Message recieved but not understood, message:" + receivedData.toString());
 				}
 			} else {
 				writer.write("An Error Occured!");
 			}
-			
-
-			
 
 			writer.flush();
 			writer.close();
@@ -228,24 +240,21 @@ public class HTSservlet extends HttpServlet {
 			}
 		}
 	}
-	
-	public String sessionKeyGenerator(){
-		String aToZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // 36 letter.
-		 Random rand=new Random();
-		    StringBuilder res=new StringBuilder();
-		    for (int i = 0; i < 15; i++) {
-		       int randIndex=rand.nextInt(aToZ.length()); 
-		       res.append(aToZ.charAt(randIndex));            
-		    }
-		    return res.toString();
-		
+
+	public String sessionKeyGenerator() {
+		String aToZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // 36 letter.
+		Random rand = new Random();
+		StringBuilder res = new StringBuilder();
+		for (int i = 0; i < 15; i++) {
+			int randIndex = rand.nextInt(aToZ.length());
+			res.append(aToZ.charAt(randIndex));
+		}
+		return res.toString();
+
 	}
-	
-	public boolean sessionMapCheck(String username, String sessionKey){
-		
-		
-		
-		
+
+	public boolean sessionMapCheck(String username, String sessionKey) {
+
 		return false;
 	}
 
