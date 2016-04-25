@@ -2,6 +2,8 @@ package servlet;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -14,11 +16,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import daos.AnswerDAO;
+import daos.EventDAO;
+import daos.QuestionDAO;
 import daos.RoomDAO;
 import daos.UserDAO;
+import daos.interfaces.IAnswerDAO;
+import daos.interfaces.IEventDAO;
+import daos.interfaces.IQuestionDAO;
 import daos.interfaces.IRoomDAO;
 import daos.interfaces.IUserDAO;
-import dtos.RoomDTO;
 import dtos.UserDTO;
 
 /**
@@ -27,6 +34,16 @@ import dtos.UserDTO;
 @WebServlet("/HTSservlet")
 public class HTSservlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	IAnswerDAO answerDAO = new AnswerDAO();
+	IEventDAO eventDAO = new EventDAO();
+	IQuestionDAO questionDAO = new QuestionDAO();
+	IRoomDAO roomDAO = new RoomDAO();
+	IUserDAO userDAO = new UserDAO();
+	//sessions, en given bruger ved login vil f� en sessionID tilknyttet til login navnet, denne sessionID bruger til at bekr�fte 
+	//hvem de er hvergang de vil lave en action udover login og create user
+	HashMap sessionMap = new HashMap();
+	//eksempel sessionMap.put("username", "sessionIDUnique");
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -38,12 +55,12 @@ public class HTSservlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		boolean check = false;
+		
+		
 		// response.getOutputStream().println("Hurray !! This Servlet Works");
 		String paramName = "logininfo";
 		String paramValue = request.getParameter(paramName);
-
+		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 		try {
 			if (paramValue != null) {
 
@@ -53,26 +70,64 @@ public class HTSservlet extends HttpServlet {
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 				if (receivedData != null) {
 					if (receivedData.get("TASK").equals("loginauth")) {
-						//System.out.println(receivedData.toString());
-						UserDTO userjson = new UserDTO(receivedData.get("PASSWORD").toString(),
-								receivedData.get("USERNAME").toString());
-					//	IFirebaseConnection firebase = new FirebaseConnection();
-					//	check = firebase.authUser(userjson);
+						// System.out.println(receivedData.toString());
+						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),receivedData.get("PASSWORD").toString());
+						boolean loginAuth = userDAO.authUser(user.getUsername(), user.getPassword());
 						
-					}else if(receivedData.get("TASK").equals("????")){
+						if (loginAuth) {
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY","succes");
+							String sessionKey =sessionKeyGenerator();
+							reply.put("SESSIONKEY", sessionKey);
+							//save session in the sessionMap
+							sessionMap.put(user.getUsername(), sessionKey);
+							
+							writer.write(reply.toString());
+						} else {
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY","failed");
+							
+							reply.put("SESSIONKEY", "NULL");
+							writer.write(reply.toString());
+						}
+
+					} else if (receivedData.get("TASK").equals("getuser")) {
+						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
+						String sessionKey = receivedData.get("SESSIONKEY").toString();
+						//check who it is, if match to sessionKey do stuff, else reply error
+						if(sessionMapCheck(user.getUsername(), sessionKey)){
+							
+						UserDTO userFound = userDAO.getUser(user.getUsername());
+						JSONObject reply = new JSONObject();
+						reply.put("REPLY","succes");
+						reply.put("USER",userFound.toJSONObject());
+						//not done
+						}else{
+							JSONObject reply = new JSONObject();
+							reply.put("REPLY","failed");
+							reply.put("MESSAGE", "Sessionkey not matching");
+							writer.write(reply.toString());
+							
+						}
 						
+
+					}else if (receivedData.get("TASK").equals("getanswer")) {
+
+					}else if (receivedData.get("TASK").equals("getevent")) {
+
+					}else if (receivedData.get("TASK").equals("getroom")) {
+
+					
 					}
+				}else{
+					writer.write("Message recieved but not understood, message:"+receivedData.toString());
 				}
 			} else {
-				check = false;
+				writer.write("An Error Occured!");
 			}
-			OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+			
 
-			if (!check) {
-				writer.write("loginfailed");
-			} else {
-				writer.write("loginsucces");
-			}
+			
 
 			writer.flush();
 			writer.close();
@@ -111,11 +166,11 @@ public class HTSservlet extends HttpServlet {
 				boolean succes = false;
 				if (receivedData.get("TASK").equals("CREATEUSER")) {
 					// System.out.println(receivedData.toString());
-					UserDTO userjson = new UserDTO(receivedData.get("USERNAME").toString(),receivedData.get("PASSONE").toString());
+					UserDTO userjson = new UserDTO(receivedData.get("USERNAME").toString(),
+							receivedData.get("PASSONE").toString());
 					IUserDAO userDAO = new UserDAO();
 					succes = userDAO.createUser(userjson);
-					IRoomDAO roomDAO = new RoomDAO();
-					succes = roomDAO.createRoom(new RoomDTO("", "", "", ""));
+
 				}
 
 				OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
@@ -172,6 +227,26 @@ public class HTSservlet extends HttpServlet {
 			} catch (IOException ioe) {
 			}
 		}
+	}
+	
+	public String sessionKeyGenerator(){
+		String aToZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // 36 letter.
+		 Random rand=new Random();
+		    StringBuilder res=new StringBuilder();
+		    for (int i = 0; i < 15; i++) {
+		       int randIndex=rand.nextInt(aToZ.length()); 
+		       res.append(aToZ.charAt(randIndex));            
+		    }
+		    return res.toString();
+		
+	}
+	
+	public boolean sessionMapCheck(String username, String sessionKey){
+		
+		
+		
+		
+		return false;
 	}
 
 }
