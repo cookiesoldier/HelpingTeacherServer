@@ -114,7 +114,8 @@ public class HTSservlet extends HttpServlet {
 					UserDTO userjson = new UserDTO(receivedData.get("USERNAME").toString(),receivedData.get("PASSONE").toString());
 					IUserDAO userDAO = new UserDAO();
 					succes = userDAO.createUser(userjson);
-					
+					IRoomDAO roomDAO = new RoomDAO();
+					succes = roomDAO.createRoom(new RoomDTO("", "", "", ""));
 				}
 
 				OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
