@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 
 
 public class RoomDTO implements Serializable {
@@ -50,6 +52,18 @@ public class RoomDTO implements Serializable {
 
 	public List<String> getEventKeys() {
 		return eventKeys;
+	}
+	
+	public JSONObject toJSONObject() {
+	
+		JSONObject data = new JSONObject();
+		data.put("ROOMKEY", roomKey);
+		data.put("OWNER", owner);
+		data.put("TYPE", type);
+		data.put("EVENTKEYS", eventKeys);
+		
+		return data;
+		
 	}
 	
 	
