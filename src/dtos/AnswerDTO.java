@@ -1,5 +1,7 @@
 package dtos;
 
+import org.json.simple.JSONObject;
+
 public class AnswerDTO {
 	
 	String answerKey;
@@ -29,6 +31,15 @@ public class AnswerDTO {
 
 	public UserDTO getSender() {
 		return sender;
+	}
+	
+	public JSONObject toJSONObject(){
+		JSONObject data = new JSONObject();
+		data.put("ANSWERKEY", answerKey);
+		data.put("BODY", body);
+		data.put("TIMESTAMP", timeStamp);
+		data.put("SENDER", sender);
+		return data;	
 	}
 
 	
