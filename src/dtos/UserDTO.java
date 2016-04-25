@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 public class UserDTO implements Serializable {
 	
 	String username = " ";
@@ -48,6 +50,9 @@ public class UserDTO implements Serializable {
 	}
 	
 
+	public UserDTO(String userName) {
+		username = userName;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -97,5 +102,16 @@ public class UserDTO implements Serializable {
 				", lastname='" + lastname + '\'' +
 				", password='" + password + '\'' +
 				'}';
+	}
+	
+	public JSONObject toJSONObject(){
+		JSONObject data = new JSONObject();
+		data.put("USERNAME", username);
+		data.put("EMAIL", email);
+		data.put("FIRSTNAME", firstname);
+		data.put("LASTNAME", lastname);
+		data.put("PASSWORD", password);
+		return data;
+		
 	}
 }
