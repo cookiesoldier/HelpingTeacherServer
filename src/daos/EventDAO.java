@@ -29,7 +29,7 @@ public class EventDAO implements IEventDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			events = new ArrayList<>();
 			System.out.println("No event list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			// creates the directory
 			File dir = new File(DIR);
 			dir.mkdirs();

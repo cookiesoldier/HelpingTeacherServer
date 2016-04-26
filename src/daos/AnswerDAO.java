@@ -30,7 +30,7 @@ public class AnswerDAO implements IAnswerDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			answers = new ArrayList<>();
 			System.out.println("No Answer list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);

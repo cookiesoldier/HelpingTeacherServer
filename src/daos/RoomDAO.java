@@ -29,7 +29,7 @@ public class RoomDAO implements IRoomDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			rooms = new ArrayList<>();
 			System.out.println("No roomlist found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);

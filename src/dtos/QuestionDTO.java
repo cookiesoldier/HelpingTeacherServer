@@ -3,6 +3,8 @@ package dtos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 public class QuestionDTO {
 
 	String title;
@@ -23,6 +25,13 @@ public class QuestionDTO {
 		this.questionKey = questionKey;
 		this.answerKeys = answerKeys;
 	}
+	/**
+	 * Initial constructor for creation
+	 * @param title
+	 * @param body
+	 * @param timeStamp
+	 * @param questionKey
+	 */
 
 	public QuestionDTO(String title, String body, String timeStamp, String questionKey) {
 		super();
@@ -50,6 +59,15 @@ public class QuestionDTO {
 
 	public List<String> getAnswerKeys() {
 		return answerKeys;
+	}
+	public Object toJSONObject() {
+		JSONObject data = new JSONObject();
+		data.put("TITLE", title);
+		data.put("BODY", body);
+		data.put("TIMESTAMP", timeStamp);
+		data.put("ANSWERKEYS", answerKeys);
+		
+		return data;
 	}
 
 

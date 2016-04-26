@@ -31,7 +31,7 @@ public class UserDAO implements IUserDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			users = new ArrayList<>();
 			System.out.println("No User list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);

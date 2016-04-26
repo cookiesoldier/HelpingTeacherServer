@@ -27,6 +27,7 @@ import daos.interfaces.IQuestionDAO;
 import daos.interfaces.IRoomDAO;
 import daos.interfaces.IUserDAO;
 import dtos.EventDTO;
+import dtos.QuestionDTO;
 import dtos.AnswerDTO;
 import dtos.RoomDTO;
 import dtos.UserDTO;
@@ -50,7 +51,6 @@ public class HTSservlet extends HttpServlet {
 	// login navnet, denne sessionID bruger til at bekr�fte
 	// hvem de er hvergang de vil lave en action udover login og create user
 
-	// github.com/cookiesoldier/HelpingTeacherServer.git
 	HashMap sessionMap = new HashMap();
 	// eksempel sessionMap.put("username", "sessionIDUnique");
 
@@ -83,9 +83,8 @@ public class HTSservlet extends HttpServlet {
 						// System.out.println(receivedData.toString());
 						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
 								receivedData.get("PASSWORD").toString());
-						boolean loginAuth = userDAO.authUser(user.getUsername(), user.getPassword());
 
-						if (loginAuth) {
+						if (userDAO.authUser(user.getUsername(), user.getPassword())) {
 							JSONObject reply = new JSONObject();
 							reply.put("REPLY", "succes");
 							String sessionKey = sessionKeyGenerator();
@@ -201,6 +200,7 @@ public class HTSservlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("doPut");
+		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 		try {
 			int length = request.getContentLength();
 
@@ -217,22 +217,75 @@ public class HTSservlet extends HttpServlet {
 				JSONParser parser = new JSONParser();
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 				// hent task:
-				boolean succes = false;
+
 				if (receivedData.get("TASK").equals("CREATEUSER")) {
+
 					// System.out.println(receivedData.toString());
-					UserDTO userjson = new UserDTO(receivedData.get("USERNAME").toString(),
+					UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
 							receivedData.get("PASSONE").toString());
-					IUserDAO userDAO = new UserDAO();
-					succes = userDAO.createUser(userjson);
+					JSONObject reply = new JSONObject();
+					if (userDAO.createUser(user)) {
+						reply.put("REPLY", "succes");
+						reply.put("USER", user);
+					} else {
+						reply.put("REPLY", "failed");
+					}
+					writer.write(reply.toString());
+				} else if (receivedData.get("TASK").equals("CREATEANSWER")) {
+					/*
+					 * Need to only recieve Body, Timestamp and who the sender
+					 * is. Rest is made here Answerkey is generated with
+					 * sessionKey generator for now :)
+					 */
+					AnswerDTO answer = new AnswerDTO(sessionKeyGenerator(), receivedData.get("BODY").toString(),
+							receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
+					JSONObject reply = new JSONObject();
+					if (answerDAO.createAnswer(answer)) {
+						reply.put("REPLY", "succes");
+						reply.put("ANSWER", answer.toJSONObject());
 
-				}
+					} else {
+						reply.put("REPLY", "failed");
+					}
+					writer.write(reply.toString());
 
-				OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+				} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
+					EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
+							receivedData.get("TIMESTAMP").toString(), (sessionKeyGenerator()));
+					JSONObject reply = new JSONObject();
+					if (eventDAO.createEvent(event)) {
+						reply.put("REPLY", "succes");
+						reply.put("EVENT", event.toJSONObject());
+					} else {
+						reply.put("REPLY", "failed");
+					}
+					writer.write(reply.toString());
 
-				if (!succes) {
-					writer.write("CONNECTION TO FIREBASE FAILED");
+				} else if (receivedData.get("TASK").equals("CREATEQUESTION")) {
+					QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
+							receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
+							sessionKeyGenerator());
+					JSONObject reply = new JSONObject();
+					if (questionDAO.createQuestion(question)) {
+						reply.put("REPLY", "succes");
+						reply.put("QUESTION", question.toJSONObject());
+					} else {
+						reply.put("REPLY", "failed");
+					}
+					writer.write(reply.toString());
+				} else if (receivedData.get("TASK").equals("CREATEROOM")) {
+					RoomDTO room = new RoomDTO(sessionKeyGenerator(), receivedData.get("OWNER").toString(),receivedData.get("type").toString() );
+					JSONObject reply = new JSONObject();
+					if (roomDAO.createRoom(room)) {
+						reply.put("REPLY", "succes");
+						reply.put("ROOM", room.toJSONObject());
+					} else {
+						reply.put("REPLY", "failed");
+					}
+					writer.write(reply.toString());
+					
 				} else {
-					writer.write("CONNECTION TO FIREBASE SUCCES");
+					writer.write("Message recieved but not understood, message:" + receivedData.toString());
 				}
 
 				writer.flush();

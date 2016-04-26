@@ -31,7 +31,7 @@ public class QuestionDAO implements IQuestionDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			questions = new ArrayList<>();
 			System.out.println("No question list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);

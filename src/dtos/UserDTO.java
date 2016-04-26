@@ -39,7 +39,7 @@ public class UserDTO implements Serializable {
 
 	}
 	
-	@Deprecated
+
 	public UserDTO(String username, String password) {
 		if (password != null) {
 			this.password = password;

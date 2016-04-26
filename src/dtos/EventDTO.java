@@ -12,14 +12,25 @@ public class EventDTO {
 	String eventKey;
 	List<String> questionkeys = new ArrayList<>();
 	
-
+/**
+ * Initial creation constructor
+ * @param title
+ * @param timeStamp
+ * @param eventKey
+ */
 	public EventDTO(String title, String timeStamp, String eventKey) {
 		super();
 		this.title = title;
 		this.timeStamp = timeStamp;
 		this.eventKey = eventKey;
 	}
-
+/**
+ * 
+ * @param title
+ * @param timeStamp
+ * @param eventKey
+ * @param questions
+ */
 	public EventDTO(String title, String timeStamp, String eventKey, List<String> questions) {
 		super();
 		this.title = title;

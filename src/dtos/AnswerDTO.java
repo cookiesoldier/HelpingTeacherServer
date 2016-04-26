@@ -7,9 +7,15 @@ public class AnswerDTO {
 	String answerKey;
 	String body;
 	String timeStamp;
-	UserDTO sender;
-	
-	public AnswerDTO(String answerKey, String body, String timeStamp, UserDTO sender) {
+	String sender;
+	/**
+	 * 
+	 * @param answerKey
+	 * @param body
+	 * @param timeStamp
+	 * @param sender
+	 */
+	public AnswerDTO(String answerKey, String body, String timeStamp, String sender) {
 		super();
 		this.answerKey = answerKey;
 		this.body = body;
@@ -29,7 +35,7 @@ public class AnswerDTO {
 		return timeStamp;
 	}
 
-	public UserDTO getSender() {
+	public String getSender() {
 		return sender;
 	}
 	
