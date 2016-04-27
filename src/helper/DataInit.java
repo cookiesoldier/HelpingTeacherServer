@@ -11,11 +11,16 @@ public class DataInit {
 	public DataInit(IUserDAO userDAO2){
 		this.userDAO = userDAO2;
 		UserDTO user = new UserDTO("test", "test");
-		userDAO2.createUser(user);
+		userDAO.createUser(user);
 		UserDTO user1 = new UserDTO("test1", "test1");
 		UserDTO user2 = new UserDTO("martin", "12345");
-		userDAO2.createUser(user1);
-		userDAO2.createUser(user2);
+		userDAO.createUser(user1);
+		//userDAO.createUser(user2);
+		
+		System.out.println(userDAO.updateUser(user, user2));
+		System.out.println(userDAO.getUser(user2));
+		System.out.println(userDAO.getUser(user));
+		
 	}
 
 }

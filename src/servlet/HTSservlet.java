@@ -356,7 +356,8 @@ public class HTSservlet extends HttpServlet {
 
 	public boolean sessionMapCheck(String username, String sessionKey) {
 
-		return true;
+		String value  = (String) sessionMap.get(username);
+		return value.equals(sessionKey);
 	}
 
 }

@@ -43,9 +43,20 @@ public class UserDAO implements IUserDAO {
 
 	@Override
 	public boolean updateUser(UserDTO oldUser, UserDTO newUser) {
-		int userNr = users.indexOf(oldUser);
-		users.add(userNr, newUser);
-		updateUserFile();
+		
+		UserDTO user = getUser(oldUser.getUsername());
+		if(user != null){
+			int userNr = users.indexOf(user);
+			users.remove(userNr);
+			users.add(userNr, newUser);
+			updateUserFile();
+			if(getUser(newUser.getUsername()) != null){
+				return true;
+			}
+		}else {
+			return false;
+		}
+		
 		return false;
 	}
 
