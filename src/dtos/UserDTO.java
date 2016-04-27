@@ -113,7 +113,7 @@ public class UserDTO implements Serializable {
 		data.put("FIRSTNAME", firstname);
 		data.put("LASTNAME", lastname);
 		data.put("PASSWORD", password);
-		data.put("SUBBEDROOMS", subscribedRooms.toString());
+		data.put("SUBBEDROOMS", subscribedRooms);
 		return data;
 		
 	}
