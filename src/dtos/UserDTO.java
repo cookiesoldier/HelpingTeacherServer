@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 
+import net.minidev.json.JSONArray;
+
 public class UserDTO implements Serializable {
 	
 	String username = " ";
@@ -111,6 +113,7 @@ public class UserDTO implements Serializable {
 		data.put("FIRSTNAME", firstname);
 		data.put("LASTNAME", lastname);
 		data.put("PASSWORD", password);
+		data.put("SUBBEDROOMS", subscribedRooms.toString());
 		return data;
 		
 	}
