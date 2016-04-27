@@ -90,7 +90,6 @@ public class HTSservlet extends HttpServlet {
 						// System.out.println(receivedData.toString());
 						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
 								receivedData.get("PASSWORD").toString());
-
 						if (userDAO.authUser(user.getUsername(), user.getPassword())) {
 							JSONObject reply = new JSONObject();
 							reply.put("REPLY", "succes");
@@ -215,7 +214,8 @@ public class HTSservlet extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().print(e.getMessage());
 				response.getWriter().close();
-			} catch (IOException e1) {
+			} catch (IOException | IllegalStateException e1) {
+				// yolo
 			}
 		}
 
@@ -303,8 +303,8 @@ public class HTSservlet extends HttpServlet {
 					}
 					writer.write(reply.toString());
 				} else if (receivedData.get("TASK").equals("CREATEROOM")) {
-					RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(),sessionKeyGenerator(), receivedData.get("OWNER").toString(),
-							receivedData.get("type").toString());
+					RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessionKeyGenerator(),
+							receivedData.get("OWNER").toString(), receivedData.get("type").toString());
 					JSONObject reply = new JSONObject();
 					if (roomDAO.createRoom(room)) {
 						reply.put("REPLY", "succes");
@@ -329,7 +329,8 @@ public class HTSservlet extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().print(e.getMessage());
 				response.getWriter().close();
-			} catch (IOException e1) {
+			} catch (IOException | IllegalStateException e1) {
+				// yolo
 			}
 		}
 	}

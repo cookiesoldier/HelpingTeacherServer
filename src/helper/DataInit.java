@@ -24,12 +24,7 @@ public class DataInit {
 		LogMethods logger = new LogMethods();
 	
 		
-		UserDTO user = new UserDTO("peter", "test");
-		UserDTO user1 = new UserDTO("thomas", "test");
-		UserDTO user2 = new UserDTO("martin", "test");
-		userDAO2.createUser(user1);
-		userDAO2.createUser(user);
-		userDAO2.createUser(user2);
+	
 		//userDAO.createUser(user2);
 		AnswerDTO answerOne = new AnswerDTO("asdfghjklq12345", "Du henter de med get kald!", logger.timeStamp(), "martin");
 		AnswerDTO answerTwo = new AnswerDTO("asprghjklq12375", "Du bruger nogle lister eller noget", logger.timeStamp(), "martin");
@@ -75,12 +70,26 @@ public class DataInit {
 		eventKeys.add(eventOne.getEventKey());
 		List<String> eventKeys2 = new ArrayList<>();
 		eventKeys2.add(eventTwo.getEventKey());
-		RoomDTO roomOne = new RoomDTO("Uni2016","abcdefrtghi9847", "test1", "public",eventKeys);
-		RoomDTO roomTwo = new RoomDTO("Madhjørnet","gauejr8rjd9ikd3", "test1", "public",eventKeys2);
-		RoomDTO roomThree = new RoomDTO("Random","pdl3kr85jd9ikd3", "test1", "public");
+		RoomDTO roomOne = new RoomDTO("Uni2016","abcdefrtghi9847", "martin", "public",eventKeys);
+		RoomDTO roomTwo = new RoomDTO("Madhjørnet","gauejr8rjd9ikd3", "peter", "public",eventKeys2);
+		RoomDTO roomThree = new RoomDTO("Random","pdl3kr85jd9ikd3", "thomas", "public");
 		roomDAO.createRoom(roomOne);
 		roomDAO.createRoom(roomTwo);
 		roomDAO.createRoom(roomThree);
+		
+		List<String> subRooms = new ArrayList<>();
+		subRooms.add(roomOne.getRoomKey());
+		subRooms.add(roomTwo.getRoomKey());
+		subRooms.add(roomThree.getRoomKey());
+		
+		UserDTO user = new UserDTO("peter", "test",subRooms);
+		UserDTO user1 = new UserDTO("thomas", "test",subRooms);
+		UserDTO user2 = new UserDTO("martin", "test",subRooms);
+		userDAO2.createUser(user1);
+		userDAO2.createUser(user);
+		userDAO2.createUser(user2);
+		
+		
 		
 	
 		

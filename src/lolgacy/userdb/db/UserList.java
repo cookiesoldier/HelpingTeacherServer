@@ -87,17 +87,17 @@ public class UserList implements IUserDatabase {
       return obj;
    }
 
-   @Override
-   public UserDTO JSONtoUser(JSONObject obj) {
-      UserDTO user;
-      String username = obj.get("username").toString();
-      String email = obj.get("email").toString();
-      String password = obj.get("password").toString();
-      String firstname = obj.get("firstname").toString();
-      String lastname = obj.get("lastname").toString();
-      user = new UserDTO(username, email, firstname, lastname, password);
-      return user;
-   }
+//   @Override
+//   public UserDTO JSONtoUser(JSONObject obj) {
+//      UserDTO user;
+//      String username = obj.get("username").toString();
+//      String email = obj.get("email").toString();
+//      String password = obj.get("password").toString();
+//      String firstname = obj.get("firstname").toString();
+//      String lastname = obj.get("lastname").toString();
+//  //    user = new UserDTO(username, email, firstname, lastname, password);
+//      return user;
+//   }
 
    @Override
    public boolean isJSONObjectUser(JSONObject obj) {
@@ -229,5 +229,11 @@ public boolean deleteUser(UserDTO user) {
 public boolean getUser(UserDTO user) {
 	// TODO Auto-generated method stub
 	return false;
+}
+
+@Override
+public UserDTO JSONtoUser(JSONObject obj) {
+	// TODO Auto-generated method stub
+	return null;
 }
 }
