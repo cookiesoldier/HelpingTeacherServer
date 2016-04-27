@@ -49,14 +49,13 @@ public class UserDAO implements IUserDAO {
 			int userNr = users.indexOf(user);
 			users.remove(userNr);
 			users.add(userNr, newUser);
-			updateUserFile();
-			if(getUser(newUser.getUsername()) != null){
-				return true;
-			}
-		}else {
-			return false;
-		}
 		
+			if(getUser(newUser.getUsername()) != null){
+				updateUserFile();
+				return true;
+				
+			}
+		}
 		return false;
 	}
 

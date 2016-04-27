@@ -41,10 +41,20 @@ public class QuestionDAO implements IQuestionDAO {
 
 	@Override
 	public boolean updateQuestion(QuestionDTO oldQuestion,QuestionDTO newQuestion) {
-		int questionNr = questions.indexOf(oldQuestion);
-		questions.add(questionNr,newQuestion);
-		updateQuestionFile();
-		return true;
+		QuestionDTO question = getQuestion(oldQuestion.getQuestionKey());
+		if(question != null){
+			int questionNr = questions.indexOf(question);
+			questions.remove(questionNr);
+			questions.add(questionNr, newQuestion);
+			
+			if(getQuestion(newQuestion.getQuestionKey()) != null){
+				updateQuestionFile();
+				return true;
+			}
+			
+		}
+		return false;
+		
 	}
 
 	@Override

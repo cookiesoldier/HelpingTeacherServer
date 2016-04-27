@@ -39,10 +39,18 @@ public class AnswerDAO implements IAnswerDAO {
 	}
 
 	@Override
-	public AnswerDTO updateAnswer(AnswerDTO oldAnswer, AnswerDTO newAnswer) {
-		int answerNr = answers.indexOf(oldAnswer);
-		answers.add(answerNr, newAnswer);
-		return answers.get(answerNr);
+	public boolean updateAnswer(AnswerDTO oldAnswer, AnswerDTO newAnswer) {
+		AnswerDTO answer = getAnswer(oldAnswer.getAnswerKey());
+		if(answer != null){
+			int answerNr = answers.indexOf(answer);
+			answers.remove(answerNr);
+			answers.add(answerNr, newAnswer);
+			if(getAnswer(newAnswer.getAnswerKey()) != null){
+				updateAnswersFile();
+				return true;
+			}
+		}
+	return false;
 	}
 
 	@Override
