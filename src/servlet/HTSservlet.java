@@ -31,6 +31,7 @@ import dtos.QuestionDTO;
 import dtos.AnswerDTO;
 import dtos.RoomDTO;
 import dtos.UserDTO;
+import helper.DataInit;
 
 /**
  * Servlet implementation class HTSservlet
@@ -64,7 +65,11 @@ public class HTSservlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		boolean runOnce = true;
+		if(runOnce){
+			DataInit dataTest = new DataInit(userDAO);
+			runOnce = false;
+		}
 		// response.getOutputStream().println("Hurray !! This Servlet Works");
 		String paramName = "logininfo";
 		//
@@ -81,9 +86,8 @@ public class HTSservlet extends HttpServlet {
 				if (receivedData != null) {
 					if (receivedData.get("TASK").equals("loginauth")) {
 						// System.out.println(receivedData.toString());
-						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
-								receivedData.get("PASSWORD").toString());
-
+						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),receivedData.get("PASSWORD").toString());
+						
 						if (userDAO.authUser(user.getUsername(), user.getPassword())) {
 							JSONObject reply = new JSONObject();
 							reply.put("REPLY", "succes");
@@ -185,7 +189,7 @@ public class HTSservlet extends HttpServlet {
 			writer.flush();
 			writer.close();
 
-		} catch (IOException | ParseException e) {
+		} catch (Exception e) {
 			try {
 
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -200,6 +204,8 @@ public class HTSservlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("doPut");
+	
+		
 		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 		try {
 			int length = request.getContentLength();
@@ -350,7 +356,7 @@ public class HTSservlet extends HttpServlet {
 
 	public boolean sessionMapCheck(String username, String sessionKey) {
 
-		return false;
+		return true;
 	}
 
 }
