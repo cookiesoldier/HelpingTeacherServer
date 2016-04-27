@@ -17,21 +17,20 @@ public class UserDTO implements Serializable {
 	String lastname = " ";
 	String password = " ";
 	
-	List<RoomDTO> subscribedRooms = new ArrayList<>();
+	List<String> subscribedRooms = new ArrayList<>();
 	
 	
 	
 	public UserDTO() {
 		
 	}
-	/**
-	 * 
-	 * @param username
-	 * @param email
-	 * @param firstname
-	 * @param lastname
-	 * @param password
-	 */
+	
+	public UserDTO(String username, List<String> subbedRooms) {
+		this.username = username;
+		this.subscribedRooms = subbedRooms;
+		
+	}
+
 	public UserDTO(String username, String email, String firstname, String lastname, String password) {
 		if (username != null) this.username = username;
 		if (email != null) this.email = email;

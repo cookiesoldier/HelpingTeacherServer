@@ -1,8 +1,10 @@
 package dtos;
 
+import java.io.Serializable;
+
 import org.json.simple.JSONObject;
 
-public class AnswerDTO {
+public class AnswerDTO implements Serializable{
 	
 	String answerKey;
 	String body;

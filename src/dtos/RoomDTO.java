@@ -16,14 +16,23 @@ public class RoomDTO implements Serializable {
 	String owner = "";
 	//String eventKeys = "";
 	String type = "";
-	
+	String title = "";
 	List<String> eventKeys = new ArrayList<>();
 
-	public RoomDTO(String roomKey, String owner, String type) {
+	public RoomDTO(String title,String roomKey, String owner, String type) {
 		super();
+		this.title = title;
 		this.roomKey = roomKey;
 		this.owner = owner;
 		this.type = type;
+	}
+	public RoomDTO(String title,String roomKey, String owner, String type, List<String> eventkeys) {
+		super();
+		this.title = title;
+		this.roomKey = roomKey;
+		this.owner = owner;
+		this.type = type;
+		this.eventKeys = eventkeys;
 	}
 
 	public String getRoomKey() {
@@ -45,6 +54,10 @@ public class RoomDTO implements Serializable {
 
 	public List<String> getEventKeys() {
 		return eventKeys;
+	}
+	
+	public String getTitle(){
+		return title;
 	}
 	
 	public JSONObject toJSONObject() {

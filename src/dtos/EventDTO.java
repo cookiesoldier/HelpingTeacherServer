@@ -1,11 +1,12 @@
 package dtos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
 
-public class EventDTO {
+public class EventDTO implements Serializable {
 	
 	String title;
 	String timeStamp;
