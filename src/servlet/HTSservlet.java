@@ -276,41 +276,118 @@ public class HTSservlet extends HttpServlet {
 	}
 
 	private void putUpdate(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
-		
-		//If wrong data input, user overridden/replaced... so be carefull?
+
+		// If wrong data input, user overridden/replaced... so be carefull?
 		if (receivedData.get("TASK").equals("UPDATEUSER")) {
-			String testString = receivedData.get("subbedrooms").toString().substring(1, receivedData.get("subbedrooms").toString().length()-1);
+			String testString = receivedData.get("subbedrooms").toString().substring(1,
+					receivedData.get("subbedrooms").toString().length() - 1);
 			List<String> subbedRooms = Arrays.asList(testString.toString().split(","));
-			
+
 			UserDTO user = new UserDTO(receivedData.get("username").toString(), receivedData.get("email").toString(),
 					receivedData.get("firstname").toString(), receivedData.get("lastname").toString(),
 					receivedData.get("password").toString(), subbedRooms);
-			
-			if(userDAO.updateUser(receivedData.get("USERNAME").toString(), user)){
-				JSONObject reply = new JSONObject();
+			JSONObject reply = new JSONObject();
+			if (userDAO.updateUser(user.getUsername(), user)) {
+
 				reply.put("REPLY", "succes");
 				reply.put("USER", user.toJSONObject());
 				writer.write(reply.toString());
-				logger.printLog("UpdateUser succes from: " + receivedData.get("USERNAME").toString() + " requested update to:"
-						+ user);
+				logger.printLog("UpdateUser succes from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + user);
 
 			} else {
-				JSONObject reply = new JSONObject();
+
 				reply.put("REPLY", "failed");
 				reply.put("MESSAGE", "could not update user");
 				writer.write(reply.toString());
-				logger.printLog("UpdateUser failed from: " + receivedData.get("USERNAME").toString() + " requested update to:"
-						+ user);
+				logger.printLog("UpdateUser failed from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + user);
 			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEANSWER")) {
+			AnswerDTO answer = new AnswerDTO(receivedData.get("answerkey").toString(),
+					receivedData.get("body").toString(), receivedData.get("timestamp").toString(),
+					receivedData.get("sender").toString());
+			JSONObject reply = new JSONObject();
+			if (answerDAO.updateAnswer(answer, answer)) {
+
+				reply.put("REPLY", "succes");
+				reply.put("ANSWER", answer.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateAnswer succes from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + answer);
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("MESSAGE", "could not update answer");
+				writer.write(reply.toString());
+				logger.printLog("UpdateAnswer failed from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + answer);
+			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEEVENT")) {
+			String testString = receivedData.get("questionkeys").toString().substring(1,
+					receivedData.get("questionkeys").toString().length() - 1);
+			List<String> questions = Arrays.asList(testString.toString().split(","));
+			EventDTO event = new EventDTO(receivedData.get("title").toString(),
+					receivedData.get("timeStamp").toString(), receivedData.get("eventKey").toString(), questions);
+			JSONObject reply = new JSONObject();
+			if (eventDAO.updateEvent(event, event)) {
+				reply.put("REPLY", "succes");
+				reply.put("ANSWER", event.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateEvent succes from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + event);
+
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("ANSWER", event.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateEvent failed from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + event);
+			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEQUESTION")) {
+			String testString = receivedData.get("answerkeys").toString().substring(1,
+					receivedData.get("answerkeys").toString().length() - 1);
+			List<String> answers = Arrays.asList(testString.toString().split(","));
+			QuestionDTO question = new QuestionDTO(receivedData.get("title").toString(),
+					receivedData.get("body").toString(), receivedData.get("timeStamp").toString(),
+					receivedData.get("questionKey").toString(), receivedData.get("sender").toString(), answers);
+			JSONObject reply = new JSONObject();
+			if (questionDAO.updateQuestion(question, question)) {
+				reply.put("REPLY", "succes");
+				reply.put("QUESTION", question.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateQuestion succes from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + question);
 
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("QUESTION", question.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateQuestion failed from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + question);
+			}
 		} else if (receivedData.get("TASK").equals("UPDATEROOM")) {
-
+			String testString = receivedData.get("eventkeys").toString().substring(1,
+					receivedData.get("eventkeys").toString().length() - 1);
+			List<String> events = Arrays.asList(testString.toString().split(","));
+			RoomDTO room = new RoomDTO(receivedData.get("title").toString(), receivedData.get("roomkey").toString(),
+					receivedData.get("owner").toString(), receivedData.get("type").toString(), events);
+			JSONObject reply = new JSONObject();
+			if (roomDAO.updateRoom(room, room)) {
+				reply.put("REPLY", "succes");
+				reply.put("ROOM", room);
+				writer.write(reply.toString());
+				logger.printLog("UpdateRoom succes from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + room);
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("ROOM", room);
+				writer.write(reply.toString());
+				logger.printLog("UpdateRoom failed from: " + receivedData.get("USERNAME").toString()
+						+ " requested update to:" + room);
+			}
 		} else {
 			writer.write("Message recieved but not understood, message:" + receivedData.toString());
 		}
