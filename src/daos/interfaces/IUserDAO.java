@@ -9,6 +9,6 @@ public interface IUserDAO {
 	UserDTO getUser(UserDTO user);
 	boolean authUser(String username, String password) throws Exception;
 	UserDTO getUser(String name);
-	boolean updateUser(UserDTO oldUser, UserDTO newUser);
+	boolean updateUser(String oldUser, UserDTO newUser);
 	
 }

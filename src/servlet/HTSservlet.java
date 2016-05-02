@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -244,13 +245,18 @@ public class HTSservlet extends HttpServlet {
 				JSONParser parser = new JSONParser();
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 				// hent task:
+				UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
+				String sessionKey = receivedData.get("SESSIONKEY").toString();
+				// check who it is, if match to sessionKey do stuff,
+				// else reply error
+				if (sessionMapCheck(user.getUsername(), sessionKey)) {
+					if (receivedData.get("TASK").toString().contains("CREATE")) {
+						putCreate(writer, receivedData);
+					} else if (receivedData.get("TASK").toString().contains("UPDATE")) {
+						putUpdate(writer, receivedData);
+					} else {
 
-				if (receivedData.get("TASK").toString().contains("CREATE")) {
-					putCreate(writer, receivedData);
-				} else if (receivedData.get("TASK").toString().contains("UPDATE")) {
-					putUpdate(writer, receivedData);
-				} else {
-
+					}
 				}
 
 				writer.flush();
@@ -270,25 +276,45 @@ public class HTSservlet extends HttpServlet {
 	}
 
 	private void putUpdate(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
-		if(receivedData.get("TASK").equals("UPDATEUSER")){
-			List<String> subscribedRooms = new ArrayList<>();
+		
+		//If wrong data input, user overridden/replaced... so be carefull?
+		if (receivedData.get("TASK").equals("UPDATEUSER")) {
+			String testString = receivedData.get("subbedrooms").toString().substring(1, receivedData.get("subbedrooms").toString().length()-1);
+			List<String> subbedRooms = Arrays.asList(testString.toString().split(","));
 			
-			UserDTO user = new UserDTO(receivedData.get("username").toString(), receivedData.get("email").toString(), 
+			UserDTO user = new UserDTO(receivedData.get("username").toString(), receivedData.get("email").toString(),
 					receivedData.get("firstname").toString(), receivedData.get("lastname").toString(),
-					receivedData.get("password").toString(), subscribedRooms);
-					
-		}else if(receivedData.get("TASK").equals("UPDATEANSWER")){
+					receivedData.get("password").toString(), subbedRooms);
 			
-		}else if(receivedData.get("TASK").equals("UPDATEEVENT")){
-			
-		}else if(receivedData.get("TASK").equals("UPDATEQUESTION")){
-			
-		}else if(receivedData.get("TASK").equals("UPDATEROOM")){
-			
-		}else{
+			if(userDAO.updateUser(receivedData.get("USERNAME").toString(), user)){
+				JSONObject reply = new JSONObject();
+				reply.put("REPLY", "succes");
+				reply.put("USER", user.toJSONObject());
+				writer.write(reply.toString());
+				logger.printLog("UpdateUser succes from: " + receivedData.get("USERNAME").toString() + " requested update to:"
+						+ user);
+
+			} else {
+				JSONObject reply = new JSONObject();
+				reply.put("REPLY", "failed");
+				reply.put("MESSAGE", "could not update user");
+				writer.write(reply.toString());
+				logger.printLog("UpdateUser failed from: " + receivedData.get("USERNAME").toString() + " requested update to:"
+						+ user);
+			}
+
+		} else if (receivedData.get("TASK").equals("UPDATEANSWER")) {
+
+		} else if (receivedData.get("TASK").equals("UPDATEEVENT")) {
+
+		} else if (receivedData.get("TASK").equals("UPDATEQUESTION")) {
+
+		} else if (receivedData.get("TASK").equals("UPDATEROOM")) {
+
+		} else {
 			writer.write("Message recieved but not understood, message:" + receivedData.toString());
 		}
-		
+
 	}
 
 	public void putCreate(OutputStreamWriter writer, JSONObject receivedData) throws IOException {

@@ -42,9 +42,9 @@ public class UserDAO implements IUserDAO {
 	}
 
 	@Override
-	public boolean updateUser(UserDTO oldUser, UserDTO newUser) {
+	public boolean updateUser(String oldUser, UserDTO newUser) {
 		
-		UserDTO user = getUser(oldUser.getUsername());
+		UserDTO user = getUser(oldUser);
 		if(user != null){
 			int userNr = users.indexOf(user);
 			users.remove(userNr);
