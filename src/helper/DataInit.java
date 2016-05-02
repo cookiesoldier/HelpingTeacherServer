@@ -1,6 +1,7 @@
 package helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import daos.AnswerDAO;
@@ -46,9 +47,6 @@ public class DataInit {
 		questionDAO.createQuestion(queTwo);
 		questionDAO.createQuestion(queThree);
 		
-		
-		
-		
 		List<String> queKeys = new ArrayList<>();
 		queKeys.add(queOne.getQuestionKey());
 		queKeys.add(queTwo.getQuestionKey());
@@ -89,6 +87,10 @@ public class DataInit {
 		userDAO2.createUser(user);
 		userDAO2.createUser(user2);
 		
+		System.out.println(queKeys);
+		String testString = queKeys.toString().substring(1, queKeys.toString().length()-1);
+		List<String> items = Arrays.asList(testString.toString().split(","));
+		System.out.println(items);
 		
 		
 	

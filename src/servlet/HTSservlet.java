@@ -2,7 +2,9 @@ package servlet;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -223,7 +225,7 @@ public class HTSservlet extends HttpServlet {
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("doPut");
+		// System.out.println("doPut");
 
 		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 		try {
@@ -243,80 +245,12 @@ public class HTSservlet extends HttpServlet {
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 				// hent task:
 
-				if (receivedData.get("TASK").equals("CREATEUSER")) {
-
-					// System.out.println(receivedData.toString());
-					UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
-							receivedData.get("PASSONE").toString());
-					JSONObject reply = new JSONObject();
-					if (userDAO.createUser(user)) {
-						reply.put("REPLY", "succes");
-						reply.put("USER", user);
-						logger.printLog("User created: " + user.getUsername() + " pass: " + user.getPassword());
-					} else {
-						reply.put("REPLY", "failed");
-					}
-					writer.write(reply.toString());
-				} else if (receivedData.get("TASK").equals("CREATEANSWER")) {
-					/*
-					 * Need to only recieve Body, Timestamp and who the sender
-					 * is. Rest is made here Answerkey is generated with
-					 * sessionKey generator for now :)
-					 */
-					AnswerDTO answer = new AnswerDTO(sessionKeyGenerator(), receivedData.get("BODY").toString(),
-							receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
-					JSONObject reply = new JSONObject();
-					if (answerDAO.createAnswer(answer)) {
-						reply.put("REPLY", "succes");
-						reply.put("ANSWER", answer.toJSONObject());
-						logger.printLog("Answer created: " + answer.toJSONObject().toString());
-
-					} else {
-						reply.put("REPLY", "failed");
-					}
-					writer.write(reply.toString());
-
-				} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
-					EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-							receivedData.get("TIMESTAMP").toString(), (sessionKeyGenerator()));
-					JSONObject reply = new JSONObject();
-					if (eventDAO.createEvent(event)) {
-						reply.put("REPLY", "succes");
-						reply.put("EVENT", event.toJSONObject());
-						logger.printLog("Event created: " + event.toJSONObject().toString());
-					} else {
-						reply.put("REPLY", "failed");
-					}
-					writer.write(reply.toString());
-
-				} else if (receivedData.get("TASK").equals("CREATEQUESTION")) {
-					QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
-							receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
-							sessionKeyGenerator(), receivedData.get("SENDER").toString());
-					JSONObject reply = new JSONObject();
-					if (questionDAO.createQuestion(question)) {
-						reply.put("REPLY", "succes");
-						reply.put("QUESTION", question.toJSONObject());
-						logger.printLog("Question created: " + question.toJSONObject().toString());
-					} else {
-						reply.put("REPLY", "failed");
-					}
-					writer.write(reply.toString());
-				} else if (receivedData.get("TASK").equals("CREATEROOM")) {
-					RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessionKeyGenerator(),
-							receivedData.get("OWNER").toString(), receivedData.get("type").toString());
-					JSONObject reply = new JSONObject();
-					if (roomDAO.createRoom(room)) {
-						reply.put("REPLY", "succes");
-						reply.put("ROOM", room.toJSONObject());
-						logger.printLog("Room created: " + room.toJSONObject().toString());
-					} else {
-						reply.put("REPLY", "failed");
-					}
-					writer.write(reply.toString());
-
+				if (receivedData.get("TASK").toString().contains("CREATE")) {
+					putCreate(writer, receivedData);
+				} else if (receivedData.get("TASK").toString().contains("UPDATE")) {
+					putUpdate(writer, receivedData);
 				} else {
-					writer.write("Message recieved but not understood, message:" + receivedData.toString());
+
 				}
 
 				writer.flush();
@@ -332,6 +266,104 @@ public class HTSservlet extends HttpServlet {
 			} catch (IOException | IllegalStateException e1) {
 				// yolo
 			}
+		}
+	}
+
+	private void putUpdate(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
+		if(receivedData.get("TASK").equals("UPDATEUSER")){
+			List<String> subscribedRooms = new ArrayList<>();
+			
+			UserDTO user = new UserDTO(receivedData.get("username").toString(), receivedData.get("email").toString(), 
+					receivedData.get("firstname").toString(), receivedData.get("lastname").toString(),
+					receivedData.get("password").toString(), subscribedRooms);
+					
+		}else if(receivedData.get("TASK").equals("UPDATEANSWER")){
+			
+		}else if(receivedData.get("TASK").equals("UPDATEEVENT")){
+			
+		}else if(receivedData.get("TASK").equals("UPDATEQUESTION")){
+			
+		}else if(receivedData.get("TASK").equals("UPDATEROOM")){
+			
+		}else{
+			writer.write("Message recieved but not understood, message:" + receivedData.toString());
+		}
+		
+	}
+
+	public void putCreate(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
+		if (receivedData.get("TASK").equals("CREATEUSER")) {
+			// System.out.println(receivedData.toString());
+			UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(), receivedData.get("PASSONE").toString());
+			JSONObject reply = new JSONObject();
+			if (userDAO.createUser(user)) {
+				reply.put("REPLY", "succes");
+				reply.put("USER", user.toJSONObject());
+				logger.printLog("User created: " + user.getUsername() + " pass: " + user.getPassword());
+			} else {
+				reply.put("REPLY", "failed");
+			}
+			writer.write(reply.toString());
+		} else if (receivedData.get("TASK").equals("CREATEANSWER")) {
+			/*
+			 * Need to only recieve Body, Timestamp and who the sender is. Rest
+			 * is made here Answerkey is generated with sessionKey generator for
+			 * now :)
+			 */
+			AnswerDTO answer = new AnswerDTO(sessionKeyGenerator(), receivedData.get("BODY").toString(),
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
+			JSONObject reply = new JSONObject();
+			if (answerDAO.createAnswer(answer)) {
+				reply.put("REPLY", "succes");
+				reply.put("ANSWER", answer.toJSONObject());
+				logger.printLog("Answer created: " + answer.toJSONObject().toString());
+
+			} else {
+				reply.put("REPLY", "failed");
+			}
+			writer.write(reply.toString());
+
+		} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
+			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
+					receivedData.get("TIMESTAMP").toString(), (sessionKeyGenerator()));
+			JSONObject reply = new JSONObject();
+			if (eventDAO.createEvent(event)) {
+				reply.put("REPLY", "succes");
+				reply.put("EVENT", event.toJSONObject());
+				logger.printLog("Event created: " + event.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+			}
+			writer.write(reply.toString());
+
+		} else if (receivedData.get("TASK").equals("CREATEQUESTION")) {
+			QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
+					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
+					sessionKeyGenerator(), receivedData.get("SENDER").toString());
+			JSONObject reply = new JSONObject();
+			if (questionDAO.createQuestion(question)) {
+				reply.put("REPLY", "succes");
+				reply.put("QUESTION", question.toJSONObject());
+				logger.printLog("Question created: " + question.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+			}
+			writer.write(reply.toString());
+		} else if (receivedData.get("TASK").equals("CREATEROOM")) {
+			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessionKeyGenerator(),
+					receivedData.get("OWNER").toString(), receivedData.get("type").toString());
+			JSONObject reply = new JSONObject();
+			if (roomDAO.createRoom(room)) {
+				reply.put("REPLY", "succes");
+				reply.put("ROOM", room.toJSONObject());
+				logger.printLog("Room created: " + room.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+			}
+			writer.write(reply.toString());
+
+		} else {
+			writer.write("Message recieved but not understood, message:" + receivedData.toString());
 		}
 	}
 
