@@ -89,6 +89,8 @@ public class HTSservlet extends HttpServlet {
 				JSONParser parser = new JSONParser();
 				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
 				if (receivedData != null) {
+					logger.printLog("Message GET: " + recievedString);
+
 					if (receivedData.get("TASK").equals("loginauth")) {
 						// System.out.println(receivedData.toString());
 						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(),
@@ -224,11 +226,13 @@ public class HTSservlet extends HttpServlet {
 
 	}
 
+	
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// System.out.println("doPut");
 
 		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+
 		try {
 			int length = request.getContentLength();
 
@@ -243,19 +247,57 @@ public class HTSservlet extends HttpServlet {
 
 				String recievedString = new String(input);
 				JSONParser parser = new JSONParser();
-				JSONObject receivedData = (JSONObject) parser.parse(recievedString);
+				JSONObject receivedData = null;
+			
+					receivedData = (JSONObject) parser.parse(recievedString);
+				
 				// hent task:
-				UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
-				String sessionKey = receivedData.get("SESSIONKEY").toString();
+
+				
+				
+
 				// check who it is, if match to sessionKey do stuff,
 				// else reply error
-				if (sessionMapCheck(user.getUsername(), sessionKey)) {
-					if (receivedData.get("TASK").toString().contains("CREATE")) {
-						putCreate(writer, receivedData);
-					} else if (receivedData.get("TASK").toString().contains("UPDATE")) {
-						putUpdate(writer, receivedData);
-					} else {
+				JSONObject reply = new JSONObject();
+				String sessionKey = null;
+				logger.printLog("preput" + receivedData);
+				 
+				if (receivedData.get("TASK").toString().equals("CREATEUSER")) {
+					putCreate(writer, receivedData);
+				} else {
+					logger.printLog("data received " + receivedData);
+					if (receivedData.containsKey("SESSIONKEY")) {
+						sessionKey = receivedData.get("SESSIONKEY").toString();
+						logger.printLog("sessionKey received "+sessionKey);
+					}
+					UserDTO user = null;
+					if(receivedData.containsKey("USERNAME")){
+						 user = new UserDTO(receivedData.get("USERNAME").toString());
+						 logger.printLog("Username Received" + user);
+					}
+					if (sessionKey != null && user != null) {
 
+						if (sessionMapCheck(user.getUsername(), sessionKey)) {
+							logger.printLog("User Authenticated "+sessionKey);
+							if (receivedData.get("TASK").toString().contains("UPDATE")) {
+								putUpdate(writer, receivedData);
+							} else if (receivedData.get("TASK").toString().contains("CREATE")) {
+								logger.printLog("create Request "+receivedData.get("TASK").toString());
+								putCreate(writer, receivedData);
+							}else{
+								reply.put("REPLY", "failed");
+								reply.put("MESSAGE", "Received message did not contain create or update.");
+								writer.write(reply.toString());
+							}
+						}else{
+							reply.put("REPLY", "failed");
+							reply.put("MESSAGE", "Error sessionkey mismatch");
+							writer.write(reply.toString());
+						}
+					}else{
+						reply.put("REPLY", "failed");
+						reply.put("MESSAGE", "Session key or username error");
+						writer.write(reply.toString());
 					}
 				}
 
@@ -265,11 +307,10 @@ public class HTSservlet extends HttpServlet {
 
 		} catch (IOException | ParseException | IllegalStateException e) {
 
-		
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().print(e.getMessage());
-				response.getWriter().close();
-			
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().print(e.getMessage());
+			response.getWriter().close();
+
 		}
 	}
 
@@ -452,7 +493,7 @@ public class HTSservlet extends HttpServlet {
 			writer.write(reply.toString());
 		} else if (receivedData.get("TASK").equals("CREATEROOM")) {
 			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessionKeyGenerator(),
-					receivedData.get("OWNER").toString(), receivedData.get("type").toString());
+					receivedData.get("OWNER").toString(), receivedData.get("TYPE").toString());
 			JSONObject reply = new JSONObject();
 			if (roomDAO.createRoom(room)) {
 				reply.put("REPLY", "succes");
