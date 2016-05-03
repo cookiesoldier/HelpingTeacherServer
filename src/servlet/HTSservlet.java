@@ -263,15 +263,13 @@ public class HTSservlet extends HttpServlet {
 				writer.close();
 			}
 
-		} catch (IOException | ParseException e) {
+		} catch (IOException | ParseException | IllegalStateException e) {
 
-			try {
+		
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().print(e.getMessage());
 				response.getWriter().close();
-			} catch (IOException | IllegalStateException e1) {
-				// yolo
-			}
+			
 		}
 	}
 
