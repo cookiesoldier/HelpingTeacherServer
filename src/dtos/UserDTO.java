@@ -41,6 +41,15 @@ public class UserDTO implements Serializable {
 		if(subscribedRooms != null) this.subscribedRooms = subbedRooms;
 
 	}
+	
+	public UserDTO(String username, String email, String firstname, String lastname, String password) {
+		if (username != null) this.username = username;
+		if (email != null) this.email = email;
+		if (firstname != null) this.firstname = firstname;
+		if (lastname != null) this.lastname = lastname; 
+		if (password != null) this.password = password;
+
+	}
 
 	public UserDTO(String username, String password) {
 		if (password != null) {

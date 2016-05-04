@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
-import daos.UserDAO;
+import daos.impl.UserDAO;
 import dtos.UserDTO;
 import helper.Password;
 

@@ -19,11 +19,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import daos.AnswerDAO;
-import daos.EventDAO;
-import daos.QuestionDAO;
-import daos.RoomDAO;
-import daos.UserDAO;
+import daos.impl.AnswerDAO;
+import daos.impl.EventDAO;
+import daos.impl.QuestionDAO;
+import daos.impl.RoomDAO;
+import daos.impl.UserDAO;
 import daos.interfaces.IAnswerDAO;
 import daos.interfaces.IEventDAO;
 import daos.interfaces.IQuestionDAO;
@@ -49,8 +49,8 @@ public class HTSservlet extends HttpServlet {
 	IRoomDAO roomDAO = new RoomDAO();
 	IUserDAO userDAO = new UserDAO();
 	LogMethods logger = new LogMethods();
-	// sessions, en given bruger ved login vil få en sessionID tilknyttet til
-	// login navnet, denne sessionID bruger til at bekræfte
+	// sessions, en given bruger ved login vil fï¿½ en sessionID tilknyttet til
+	// login navnet, denne sessionID bruger til at bekrï¿½fte
 	// hvem de er hvergang de vil lave en action udover login og create user
 
 	// sessions, en given bruger ved login vil fï¿½ en sessionID tilknyttet til
