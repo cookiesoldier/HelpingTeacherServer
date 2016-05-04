@@ -17,4 +17,8 @@ public class Handler {
 	
 	public static SessionMap sessions = new SessionMap();
 	
+	public static String generateSessionKey() {
+		return sessions.generateSessionKey();
+	}
+	
 }

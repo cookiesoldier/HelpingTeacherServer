@@ -16,6 +16,10 @@ public class SessionMap {
 		sessions.put(username, sessionKey);
 	}
 	
+	public void removeSession(String username) {
+		sessions.remove(username);
+	}
+	
 	public String generateSessionKey() {
 		String aToZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // 36 letter.
 		Random rand = new Random();
