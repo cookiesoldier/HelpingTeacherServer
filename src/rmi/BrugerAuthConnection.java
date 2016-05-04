@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 
 import brugerautorisation.data.Bruger;
 import brugerautorisation.transport.rmi.Brugeradmin;
+import daos.Handler;
 import daos.impl.UserDAO;
 import dtos.UserDTO;
 import helper.Password;
@@ -18,7 +19,7 @@ public class BrugerAuthConnection {
 	final static String DB_URL = "rmi://javabog.dk/brugeradmin";
 	
 	public BrugerAuthConnection() {
-		userdao = new UserDAO();
+		userdao = Handler.userdao;
 		try {
 			ba = (Brugeradmin) Naming.lookup(DB_URL);
 		} catch (MalformedURLException e) {
@@ -34,7 +35,7 @@ public class BrugerAuthConnection {
 	}
 	
 	public UserDTO hentBruger(String username, String password) {
-		if(!isUserInLocalList(username)) {
+		if(isUserInLocalList(username)) {
 			
 			return userdao.getUser(username);
 		} else {

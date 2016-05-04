@@ -2,11 +2,8 @@ package servlet;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -19,23 +16,20 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import daos.impl.AnswerDAO;
-import daos.impl.EventDAO;
-import daos.impl.QuestionDAO;
-import daos.impl.RoomDAO;
-import daos.impl.UserDAO;
+import daos.Handler;
 import daos.interfaces.IAnswerDAO;
 import daos.interfaces.IEventDAO;
 import daos.interfaces.IQuestionDAO;
 import daos.interfaces.IRoomDAO;
 import daos.interfaces.IUserDAO;
+import dtos.AnswerDTO;
 import dtos.EventDTO;
 import dtos.QuestionDTO;
-import dtos.AnswerDTO;
 import dtos.RoomDTO;
 import dtos.UserDTO;
 import helper.DataInit;
 import helper.LogMethods;
+import helper.SessionMap;
 
 /**
  * Servlet implementation class HTSservlet
@@ -43,11 +37,11 @@ import helper.LogMethods;
 @WebServlet("/HTSservlet")
 public class HTSservlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	IAnswerDAO answerDAO = new AnswerDAO();
-	IEventDAO eventDAO = new EventDAO();
-	IQuestionDAO questionDAO = new QuestionDAO();
-	IRoomDAO roomDAO = new RoomDAO();
-	IUserDAO userDAO = new UserDAO();
+	IAnswerDAO answerDAO = Handler.answerdao;
+	IEventDAO eventDAO = Handler.eventdao;
+	IQuestionDAO questionDAO = Handler.questiondao;
+	IRoomDAO roomDAO = Handler.roomdao;
+	IUserDAO userDAO = Handler.userdao;
 	LogMethods logger = new LogMethods();
 	// sessions, en given bruger ved login vil f� en sessionID tilknyttet til
 	// login navnet, denne sessionID bruger til at bekr�fte
@@ -57,7 +51,7 @@ public class HTSservlet extends HttpServlet {
 	// login navnet, denne sessionID bruger til at bekr�fte
 	// hvem de er hvergang de vil lave en action udover login og create user
 
-	HashMap sessionMap = new HashMap();
+	SessionMap sessions = Handler.sessions;
 	// eksempel sessionMap.put("username", "sessionIDUnique");
 
 	/**
@@ -98,10 +92,10 @@ public class HTSservlet extends HttpServlet {
 						if (userDAO.authUser(user.getUsername(), user.getPassword())) {
 							JSONObject reply = new JSONObject();
 							reply.put("REPLY", "succes");
-							String sessionKey = sessionKeyGenerator();
+							String sessionKey = sessions.generateSessionKey();
 							reply.put("SESSIONKEY", sessionKey);
 							// save session in the sessionMap
-							sessionMap.put(user.getUsername(), sessionKey);
+							sessions.addSession(user.getUsername(), sessionKey);
 
 							writer.write(reply.toString());
 							logger.printLog("User authenticated: " + user.toJSONObject().toString());
@@ -119,7 +113,7 @@ public class HTSservlet extends HttpServlet {
 						String sessionKey = receivedData.get("SESSIONKEY").toString();
 						// check who it is, if match to sessionKey do stuff,
 						// else reply error
-						if (sessionMapCheck(user.getUsername(), sessionKey)) {
+						if (sessions.sessionMapCheck(user.getUsername(), sessionKey)) {
 
 							UserDTO userFound = userDAO.getUser(receivedData.get("GETNAME").toString());
 							JSONObject reply = new JSONObject();
@@ -140,7 +134,7 @@ public class HTSservlet extends HttpServlet {
 
 					} else if (receivedData.get("TASK").equals("getevent")) {
 						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						if (sessionMapCheck(receivedData.get("USERNAME").toString(), sessionKey)) {
+						if (sessions.sessionMapCheck(receivedData.get("USERNAME").toString(), sessionKey)) {
 							EventDTO event = eventDAO.getEvent(receivedData.get("EVENTKEY").toString());
 							JSONObject reply = new JSONObject();
 							reply.put("REPLY", "succes");
@@ -163,7 +157,7 @@ public class HTSservlet extends HttpServlet {
 						String sessionKey = receivedData.get("SESSIONKEY").toString();
 						JSONObject reply = new JSONObject();
 
-						if (sessionMapCheck(username, sessionKey)) {
+						if (sessions.sessionMapCheck(username, sessionKey)) {
 							// skal hente et specifikt svar, defineret af dens
 							// key
 							String answerKey = receivedData.get("ANSWERKEY").toString();
@@ -185,7 +179,7 @@ public class HTSservlet extends HttpServlet {
 						String sessionKey = receivedData.get("SESSIONKEY").toString();
 						JSONObject reply = new JSONObject();
 
-						if (sessionMapCheck(username, sessionKey)) {
+						if (sessions.sessionMapCheck(username, sessionKey)) {
 							// skal hente et specifikt svar, defineret af dens
 							// key
 							String roomKey = receivedData.get("ROOMKEY").toString();
@@ -277,7 +271,7 @@ public class HTSservlet extends HttpServlet {
 					}
 					if (sessionKey != null && user != null) {
 
-						if (sessionMapCheck(user.getUsername(), sessionKey)) {
+						if (sessions.sessionMapCheck(user.getUsername(), sessionKey)) {
 							logger.printLog("User Authenticated "+sessionKey);
 							if (receivedData.get("TASK").toString().contains("UPDATE")) {
 								putUpdate(writer, receivedData);
@@ -452,7 +446,7 @@ public class HTSservlet extends HttpServlet {
 			 * is made here Answerkey is generated with sessionKey generator for
 			 * now :)
 			 */
-			AnswerDTO answer = new AnswerDTO(sessionKeyGenerator(), receivedData.get("BODY").toString(),
+			AnswerDTO answer = new AnswerDTO(sessions.generateSessionKey(), receivedData.get("BODY").toString(),
 					receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
 			JSONObject reply = new JSONObject();
 			if (answerDAO.createAnswer(answer)) {
@@ -467,7 +461,7 @@ public class HTSservlet extends HttpServlet {
 
 		} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
 			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("TIMESTAMP").toString(), (sessionKeyGenerator()));
+					receivedData.get("TIMESTAMP").toString(), (sessions.generateSessionKey()));
 			JSONObject reply = new JSONObject();
 			if (eventDAO.createEvent(event)) {
 				reply.put("REPLY", "succes");
@@ -481,7 +475,7 @@ public class HTSservlet extends HttpServlet {
 		} else if (receivedData.get("TASK").equals("CREATEQUESTION")) {
 			QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
 					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
-					sessionKeyGenerator(), receivedData.get("SENDER").toString());
+					sessions.generateSessionKey(), receivedData.get("SENDER").toString());
 			JSONObject reply = new JSONObject();
 			if (questionDAO.createQuestion(question)) {
 				reply.put("REPLY", "succes");
@@ -492,7 +486,7 @@ public class HTSservlet extends HttpServlet {
 			}
 			writer.write(reply.toString());
 		} else if (receivedData.get("TASK").equals("CREATEROOM")) {
-			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessionKeyGenerator(),
+			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessions.generateSessionKey(),
 					receivedData.get("OWNER").toString(), receivedData.get("TYPE").toString());
 			JSONObject reply = new JSONObject();
 			if (roomDAO.createRoom(room)) {
@@ -542,22 +536,6 @@ public class HTSservlet extends HttpServlet {
 		}
 	}
 
-	public String sessionKeyGenerator() {
-		String aToZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // 36 letter.
-		Random rand = new Random();
-		StringBuilder res = new StringBuilder();
-		for (int i = 0; i < 15; i++) {
-			int randIndex = rand.nextInt(aToZ.length());
-			res.append(aToZ.charAt(randIndex));
-		}
-		return res.toString();
-
-	}
-
-	public boolean sessionMapCheck(String username, String sessionKey) {
-
-		String value = (String) sessionMap.get(username);
-		return value.equals(sessionKey);
-	}
+	
 
 }
