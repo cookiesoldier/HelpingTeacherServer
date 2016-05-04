@@ -2,6 +2,13 @@
     <wb-module deploy-name="HelpingTeacherServer2">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/libs" source-path="/libs"/>
+        <dependent-module archiveName="json_simple-1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/json_simple-1.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-codec-1.10.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/HelpingTeacherServer2/libs/commons-codec-1.10.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="HelpingTeacherServer2"/>
         <property name="java-output-path" value="/HelpingTeacherServer2/build/classes"/>
     </wb-module>

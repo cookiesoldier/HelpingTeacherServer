@@ -13,6 +13,7 @@ import daos.interfaces.IAnswerDAO;
 import dtos.AnswerDTO;
 import dtos.RoomDTO;
 import dtos.UserDTO;
+import helper.LogMethods;
 
 public class AnswerDAO implements IAnswerDAO {
 
@@ -29,8 +30,10 @@ public class AnswerDAO implements IAnswerDAO {
 			System.out.println("Answer list loaded from file.");
 		} catch (IOException | ClassNotFoundException e) {
 			answers = new ArrayList<>();
-			System.out.println("No Answer list found. A new list has been created.");
-			e.printStackTrace();
+
+			// System.out.println("No Answer list found. A new list has been
+			// created.");
+			// e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);
@@ -39,10 +42,18 @@ public class AnswerDAO implements IAnswerDAO {
 	}
 
 	@Override
-	public AnswerDTO updateAnswer(AnswerDTO oldAnswer, AnswerDTO newAnswer) {
-		int answerNr = answers.indexOf(oldAnswer);
-		answers.add(answerNr, newAnswer);
-		return answers.get(answerNr);
+	public boolean updateAnswer(AnswerDTO oldAnswer, AnswerDTO newAnswer) {
+		AnswerDTO answer = getAnswer(oldAnswer.getAnswerKey());
+		if (answer != null) {
+			int answerNr = answers.indexOf(answer);
+			answers.remove(answerNr);
+			answers.add(answerNr, newAnswer);
+			if (getAnswer(newAnswer.getAnswerKey()) != null) {
+				updateAnswersFile();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -50,7 +61,8 @@ public class AnswerDAO implements IAnswerDAO {
 		if (getAnswer(answer.getAnswerKey()) != null)
 			return false;
 		answers.add(answer);
-		System.out.println("Answer added to list");
+
+		// System.out.println("Answer added to list");
 		updateAnswersFile();
 		return true;
 	}
@@ -62,10 +74,12 @@ public class AnswerDAO implements IAnswerDAO {
 			oout.writeObject(answers);
 			oout.close();
 			fout.close();
-			System.out.println("AnswersList was saved to disk.");
+
+			// System.out.println("AnswersList was saved to disk.");
 		} catch (IOException e) {
+
 			System.out.println("Answerslist could not be saved to disk.");
-			e.printStackTrace();
+			// e.printStackTrace();
 
 		}
 
@@ -74,17 +88,20 @@ public class AnswerDAO implements IAnswerDAO {
 	@Override
 	public boolean deleteAnswers(AnswerDTO answer) {
 		if (answers.remove(answer)) {
+
 			updateAnswersFile();
+
 			return true;
 		}
+
 		return false;
 	}
-
 
 	@Override
 	public AnswerDTO getAnswer(String answerKey) {
 		for (AnswerDTO u : answers) {
 			if (u.getAnswerKey().equals(answerKey))
+
 				return u;
 		}
 		return null;

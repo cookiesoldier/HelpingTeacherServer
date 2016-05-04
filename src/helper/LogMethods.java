@@ -14,19 +14,19 @@ import java.time.LocalDateTime;
 public class LogMethods {
 
 	
-	
+	static String logDir = "data/log";
 	
 	public boolean printLog(String action){
 		
 		boolean worked = false;
 		
 		//fileCheck
-		if(new File("tmp/test/serverLog.txt").isFile()){
+		if(new File(logDir+"/serverLog.txt").isFile()){
 			//file exists! ok!
 			//System.out.println("fileExists!"+ new File("serverLog.txt").getAbsolutePath());
 		}else{
 			//create file!
-			File dir = new File("tmp/test");
+			File dir = new File(logDir);
 			
 			dir.mkdirs();
 			File tmp = new File(dir, "serverLog.txt");
@@ -44,7 +44,7 @@ public class LogMethods {
 		String text = timeStamp() +":  "+ action+"\n";
 		
 		try {
-		    Files.write(Paths.get("tmp/test/serverLog.txt"), text.getBytes(), StandardOpenOption.APPEND);
+		    Files.write(Paths.get(logDir+"/serverLog.txt"), text.getBytes(), StandardOpenOption.APPEND);
 
 		    
 		    worked = true;

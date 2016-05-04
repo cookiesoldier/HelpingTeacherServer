@@ -1,30 +1,43 @@
 package dtos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventDTO {
+import org.json.simple.JSONObject;
+
+public class EventDTO implements Serializable {
 	
 	String title;
 	String timeStamp;
 	String eventKey;
+	List<String> questionkeys = new ArrayList<>();
 	
-	List<QuestionDTO> questions = new ArrayList<>();
-	
-
+/**
+ * Initial creation constructor
+ * @param title
+ * @param timeStamp
+ * @param eventKey
+ */
 	public EventDTO(String title, String timeStamp, String eventKey) {
 		super();
 		this.title = title;
 		this.timeStamp = timeStamp;
 		this.eventKey = eventKey;
 	}
-
-	public EventDTO(String title, String timeStamp, String eventKey, List<QuestionDTO> questions) {
+/**
+ * 
+ * @param title
+ * @param timeStamp
+ * @param eventKey
+ * @param questions
+ */
+	public EventDTO(String title, String timeStamp, String eventKey, List<String> questions) {
 		super();
 		this.title = title;
 		this.timeStamp = timeStamp;
 		this.eventKey = eventKey;
-		this.questions = questions;
+		this.questionkeys = questions;
 	}
 
 	public String getTitle() {
@@ -35,12 +48,22 @@ public class EventDTO {
 		return timeStamp;
 	}
 
-	public List<QuestionDTO> getQuestions() {
-		return questions;
+	public List<String> getQuestions() {
+		return questionkeys;
 	}
 
 	public String getEventKey() {
 		return eventKey;
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject data = new JSONObject();
+		data.put("TITLE", title);
+		data.put("TIMESTAMP", timeStamp);
+		data.put("EVENTKEY", eventKey);
+		data.put("QUESTIONKEYS", questionkeys);
+
+		return data;
 	}
 	
 	

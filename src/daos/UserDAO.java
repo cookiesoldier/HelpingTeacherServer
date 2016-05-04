@@ -12,6 +12,7 @@ import java.util.List;
 
 import daos.interfaces.IUserDAO;
 import dtos.UserDTO;
+import helper.DataInit;
 import helper.Password;
 
 public class UserDAO implements IUserDAO {
@@ -31,19 +32,30 @@ public class UserDAO implements IUserDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			users = new ArrayList<>();
 			System.out.println("No User list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);
 			dir.mkdirs();
 		}
+		
 	}
 
 	@Override
-	public boolean updateUser(UserDTO oldUser, UserDTO newUser) {
-		int userNr = users.indexOf(oldUser);
-		users.add(userNr, newUser);
-		updateUserFile();
+	public boolean updateUser(String oldUser, UserDTO newUser) {
+		
+		UserDTO user = getUser(oldUser);
+		if(user != null){
+			int userNr = users.indexOf(user);
+			users.remove(userNr);
+			users.add(userNr, newUser);
+		
+			if(getUser(newUser.getUsername()) != null){
+				updateUserFile();
+				return true;
+				
+			}
+		}
 		return false;
 	}
 
@@ -102,12 +114,13 @@ public class UserDAO implements IUserDAO {
 	}
 
 	@Override
-	public boolean authUser(String username, String password) {
+	public boolean authUser(String username, String password) throws Exception {
 		for (UserDTO u : users) {
 			if (u.getUsername().equals(username)) {
 				System.out.println("User " + username + " found.");
-				if (u.getPassword().equals(password)) {
+				if (Password.check(password,u.getPassword())) {
 					try {
+						System.out.println("User " + username + " found. And pasword matches");
 						return Password.check(password, u.getPassword());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block

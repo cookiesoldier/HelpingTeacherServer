@@ -13,17 +13,26 @@ import org.json.simple.JSONObject;
 public class RoomDTO implements Serializable {
 	
 	String roomKey = "";
-	UserDTO owner;
+	String owner = "";
 	//String eventKeys = "";
 	String type = "";
-	
+	String title = "";
 	List<String> eventKeys = new ArrayList<>();
 
-	public RoomDTO(String roomKey, UserDTO owner, String type) {
+	public RoomDTO(String title,String roomKey, String owner, String type) {
 		super();
+		this.title = title;
 		this.roomKey = roomKey;
 		this.owner = owner;
 		this.type = type;
+	}
+	public RoomDTO(String title,String roomKey, String owner, String type, List<String> eventkeys) {
+		super();
+		this.title = title;
+		this.roomKey = roomKey;
+		this.owner = owner;
+		this.type = type;
+		this.eventKeys = eventkeys;
 	}
 
 	public String getRoomKey() {
@@ -34,24 +43,21 @@ public class RoomDTO implements Serializable {
 		this.roomKey = roomKey;
 	}
 
-	public UserDTO getOwner() {
+	public String getOwner() {
 		return owner;
-	}
-
-	public void setOwner(UserDTO owner) {
-		this.owner = owner;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
 
 	public List<String> getEventKeys() {
 		return eventKeys;
+	}
+	
+	public String getTitle(){
+		return title;
 	}
 	
 	public JSONObject toJSONObject() {

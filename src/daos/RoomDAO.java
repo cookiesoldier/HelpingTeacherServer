@@ -29,7 +29,7 @@ public class RoomDAO implements IRoomDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			rooms = new ArrayList<>();
 			System.out.println("No roomlist found. A new list has been created.");
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			// creates the directory
 			File dir = new File(DIR);
@@ -47,15 +47,26 @@ public class RoomDAO implements IRoomDAO {
 	}
 
 	@Override
-	public RoomDTO updateRoom(RoomDTO oldRoom, RoomDTO newRoom) {
-		int roomNr = rooms.indexOf(oldRoom);
-		rooms.add(roomNr, newRoom);
-		return rooms.get(roomNr);
+	public boolean updateRoom(RoomDTO oldRoom, RoomDTO newRoom) {
+		RoomDTO room = getRoom(oldRoom.getRoomKey());
+		if (room != null) {
+			int roomNr = rooms.indexOf(room);
+			rooms.remove( roomNr );
+			rooms.add( roomNr , newRoom);
+		
+			if (getRoom(newRoom.getRoomKey()) != null) {
+				updateRoomFile();
+				return true;
+				
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean createRoom(RoomDTO room) {
-		if (getRoom(room.getRoomKey()) != null)return false;
+		if (getRoom(room.getRoomKey()) != null)
+			return false;
 		rooms.add(room);
 		System.out.println("room added to list");
 		updateRoomFile();

@@ -29,7 +29,7 @@ public class EventDAO implements IEventDAO {
 		} catch (IOException | ClassNotFoundException e) {
 			events = new ArrayList<>();
 			System.out.println("No event list found. A new list has been created.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			// creates the directory
 			File dir = new File(DIR);
 			dir.mkdirs();
@@ -38,10 +38,18 @@ public class EventDAO implements IEventDAO {
 	
 
 	@Override
-	public EventDTO updateEvent(EventDTO oldEvent, EventDTO newEvent) {
-		int eventNr = events.indexOf(oldEvent);
-		events.add(eventNr, newEvent);
-		return events.get(eventNr);
+	public boolean updateEvent(EventDTO oldEvent, EventDTO newEvent) {
+		EventDTO event = getEvent(oldEvent.getEventKey());
+		if(event != null){
+			int eventNr = events.indexOf(event);
+			events.remove(eventNr);
+			events.add(eventNr, newEvent);
+			if(getEvent(newEvent.getEventKey())!= null){
+				updateEventFile();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

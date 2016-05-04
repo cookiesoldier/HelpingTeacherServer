@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 
+import net.minidev.json.JSONArray;
+
 public class UserDTO implements Serializable {
 	
 	String username = " ";
@@ -15,31 +17,31 @@ public class UserDTO implements Serializable {
 	String lastname = " ";
 	String password = " ";
 	
-	List<RoomDTO> subscribedRooms = new ArrayList<>();
+	List<String> subscribedRooms = new ArrayList<>();
 	
 	
 	
 	public UserDTO() {
 		
 	}
-	/**
-	 * 
-	 * @param username
-	 * @param email
-	 * @param firstname
-	 * @param lastname
-	 * @param password
-	 */
-	public UserDTO(String username, String email, String firstname, String lastname, String password) {
+	
+	public UserDTO(String username, String password, List<String> subbedRooms) {
+		this.username = username;
+		this.password = password;
+		this.subscribedRooms = subbedRooms;
+		
+	}
+
+	public UserDTO(String username, String email, String firstname, String lastname, String password, List<String> subbedRooms) {
 		if (username != null) this.username = username;
 		if (email != null) this.email = email;
 		if (firstname != null) this.firstname = firstname;
 		if (lastname != null) this.lastname = lastname; 
 		if (password != null) this.password = password;
+		if(subscribedRooms != null) this.subscribedRooms = subbedRooms;
 
 	}
-	
-	//@Deprecated
+
 	public UserDTO(String username, String password) {
 		if (password != null) {
 			this.password = password;
@@ -111,6 +113,7 @@ public class UserDTO implements Serializable {
 		data.put("FIRSTNAME", firstname);
 		data.put("LASTNAME", lastname);
 		data.put("PASSWORD", password);
+		data.put("SUBBEDROOMS", subscribedRooms);
 		return data;
 		
 	}
