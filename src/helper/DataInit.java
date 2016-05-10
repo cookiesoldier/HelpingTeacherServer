@@ -42,7 +42,7 @@ public class DataInit {
 		QuestionDTO queTwo = new QuestionDTO("Data visning", "Nogen gode ideer til at vise data??", logger.timeStamp(), "irj4kpeorkdikt0","thomas",answerKeys2);
 		List<String> answerKeys3 = new ArrayList<>();
 		answerKeys3.add(answerThree.getAnswerKey());
-		QuestionDTO queThree = new QuestionDTO("t�rtehj�lp!", "Hvordan laver man t�rte?", logger.timeStamp(), "irj4kkdjeodi777","peter", answerKeys3);
+		QuestionDTO queThree = new QuestionDTO("madhjælp!", "Hvordan laver man tærte?", logger.timeStamp(), "irj4kkdjeodi777","peter", answerKeys3);
 		questionDAO.createQuestion(queOne);
 		questionDAO.createQuestion(queTwo);
 		questionDAO.createQuestion(queThree);
@@ -50,12 +50,12 @@ public class DataInit {
 		List<String> queKeys = new ArrayList<>();
 		queKeys.add(queOne.getQuestionKey());
 		queKeys.add(queTwo.getQuestionKey());
-		EventDTO eventOne = new EventDTO("Computer og data", logger.timeStamp(), "oenzjs990274bew", queKeys);
+		EventDTO eventOne = new EventDTO("Computer og data", logger.timeStamp(),"martin", "oenzjs990274bew", queKeys);
 		
 		
 		List<String> queKeys2 = new ArrayList<>();
 		queKeys2.add(queThree.getQuestionKey());
-		EventDTO eventTwo = new EventDTO("madlavning", logger.timeStamp(), "pdie94ie8m1g304", queKeys2);
+		EventDTO eventTwo = new EventDTO("madlavning", logger.timeStamp(),"peter", "pdie94ie8m1g304", queKeys2);
 		
 		eventDAO.createEvent(eventOne);
 		eventDAO.createEvent(eventTwo);

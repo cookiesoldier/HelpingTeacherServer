@@ -358,13 +358,13 @@ public class HTSservlet extends HttpServlet {
 
 		// If wrong data input, user overridden/replaced... so be carefull?
 		if (receivedData.get("TASK").equals("UPDATEUSER")) {
-			String testString = receivedData.get("subbedrooms").toString().substring(1,
-					receivedData.get("subbedrooms").toString().length() - 1);
+			String testString = receivedData.get("SUBBEDROOMS").toString().substring(1,
+					receivedData.get("SUBBEDROOMS").toString().length() - 1);
 			List<String> subbedRooms = Arrays.asList(testString.toString().split(","));
 
-			UserDTO user = new UserDTO(receivedData.get("username").toString(), receivedData.get("email").toString(),
-					receivedData.get("firstname").toString(), receivedData.get("lastname").toString(),
-					receivedData.get("password").toString(), subbedRooms);
+			UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(), receivedData.get("EMAIL").toString(),
+					receivedData.get("FIRSTNAME").toString(), receivedData.get("LASTNAME").toString(),
+					receivedData.get("PASSWORD").toString(), subbedRooms);
 			JSONObject reply = new JSONObject();
 			if (userDAO.updateUser(user.getUsername(), user)) {
 
@@ -385,8 +385,8 @@ public class HTSservlet extends HttpServlet {
 
 		} else if (receivedData.get("TASK").equals("UPDATEANSWER")) {
 			AnswerDTO answer = new AnswerDTO(receivedData.get("answerkey").toString(),
-					receivedData.get("body").toString(), receivedData.get("timestamp").toString(),
-					receivedData.get("sender").toString());
+					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
+					receivedData.get("SENDER").toString());
 			JSONObject reply = new JSONObject();
 			if (answerDAO.updateAnswer(answer, answer)) {
 
@@ -404,11 +404,12 @@ public class HTSservlet extends HttpServlet {
 			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEEVENT")) {
-			String testString = receivedData.get("questionkeys").toString().substring(1,
-					receivedData.get("questionkeys").toString().length() - 1);
+			String testString = receivedData.get("QUESTIONKEYS").toString().substring(1,
+					receivedData.get("QUESTIONKEYS").toString().length() - 1);
 			List<String> questions = Arrays.asList(testString.toString().split(","));
 			EventDTO event = new EventDTO(receivedData.get("title").toString(),
-					receivedData.get("timeStamp").toString(), receivedData.get("eventKey").toString(), questions);
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("EVENTKEY").toString()
+					,receivedData.get("CREATOR").toString(), questions);
 			JSONObject reply = new JSONObject();
 			if (eventDAO.updateEvent(event, event)) {
 				reply.put("REPLY", "succes");
@@ -426,12 +427,12 @@ public class HTSservlet extends HttpServlet {
 			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEQUESTION")) {
-			String testString = receivedData.get("answerkeys").toString().substring(1,
-					receivedData.get("answerkeys").toString().length() - 1);
+			String testString = receivedData.get("ANSWERKEYS").toString().substring(1,
+					receivedData.get("ANSWERKEYS").toString().length() - 1);
 			List<String> answers = Arrays.asList(testString.toString().split(","));
-			QuestionDTO question = new QuestionDTO(receivedData.get("title").toString(),
-					receivedData.get("body").toString(), receivedData.get("timeStamp").toString(),
-					receivedData.get("questionKey").toString(), receivedData.get("sender").toString(), answers);
+			QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
+					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
+					receivedData.get("QUESTIONKEYS").toString(), receivedData.get("SENDER").toString(), answers);
 			JSONObject reply = new JSONObject();
 			if (questionDAO.updateQuestion(question, question)) {
 				reply.put("REPLY", "succes");
@@ -448,11 +449,11 @@ public class HTSservlet extends HttpServlet {
 						+ " requested update to:" + question);
 			}
 		} else if (receivedData.get("TASK").equals("UPDATEROOM")) {
-			String testString = receivedData.get("eventkeys").toString().substring(1,
-					receivedData.get("eventkeys").toString().length() - 1);
+			String testString = receivedData.get("EVENTKEYS").toString().substring(1,
+					receivedData.get("EVENTKEYS").toString().length() - 1);
 			List<String> events = Arrays.asList(testString.toString().split(","));
-			RoomDTO room = new RoomDTO(receivedData.get("title").toString(), receivedData.get("roomkey").toString(),
-					receivedData.get("owner").toString(), receivedData.get("type").toString(), events);
+			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), receivedData.get("ROOMKEYS").toString(),
+					receivedData.get("OWNER").toString(), receivedData.get("TYPE").toString(), events);
 			JSONObject reply = new JSONObject();
 			if (roomDAO.updateRoom(room, room)) {
 				reply.put("REPLY", "succes");
@@ -507,7 +508,8 @@ public class HTSservlet extends HttpServlet {
 
 		} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
 			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("TIMESTAMP").toString(), (sessions.generateSessionKey()));
+					receivedData.get("TIMESTAMP").toString(),
+					receivedData.get("CREATOR").toString(), (sessions.generateSessionKey()));
 			JSONObject reply = new JSONObject();
 			if (eventDAO.createEvent(event)) {
 				reply.put("REPLY", "succes");
