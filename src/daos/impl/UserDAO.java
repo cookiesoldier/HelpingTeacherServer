@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daos.interfaces.IUserDAO;
+import dtos.RoomDTO;
 import dtos.UserDTO;
 import helper.DataInit;
 import helper.Password;
@@ -78,11 +79,17 @@ public class UserDAO implements IUserDAO {
 
 	@Override
 	public boolean deleteUser(UserDTO user) {
-		if(users.remove(user)){
-			updateUserFile();
-			return true;
+		
+		for (UserDTO u : users) {
+			if (u.getUsername().equals(user.getUsername())){
+				users.remove(u);
+				updateUserFile();
+				return true;
+				
+			}
 		}
-		return false;
+	return false;
+	
 	}
 
 	@Override

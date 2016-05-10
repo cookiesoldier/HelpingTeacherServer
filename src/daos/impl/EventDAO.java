@@ -65,11 +65,16 @@ public class EventDAO implements IEventDAO {
 
 	@Override
 	public boolean deleteEvent(EventDTO event) {
-		if(events.remove(event)){
-			updateEventFile();
-			return true;
+		for (EventDTO u : events) {
+			if (u.getEventKey().equals(event.getEventKey())){
+				events.remove(u);
+				updateEventFile();
+				return true;
+				
+			}
 		}
-		return false;
+	return false;
+		
 	}
 
 	@Override

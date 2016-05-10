@@ -68,11 +68,17 @@ public class QuestionDAO implements IQuestionDAO {
 
 	@Override
 	public boolean deleteQuestion(QuestionDTO question) {
-		if(questions.remove(question)){
-			updateQuestionFile();
-			return true;
+		
+		for (QuestionDTO u : questions) {
+			if (u.getQuestionKey().equals(question.getQuestionKey())){
+				questions.remove(u);
+				updateQuestionFile();
+				return true;
+				
+			}
 		}
-		return false;
+	return false;
+
 	}
 
 	private void updateQuestionFile() {

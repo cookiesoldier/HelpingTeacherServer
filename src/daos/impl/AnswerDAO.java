@@ -11,6 +11,7 @@ import java.util.List;
 
 import daos.interfaces.IAnswerDAO;
 import dtos.AnswerDTO;
+import dtos.EventDTO;
 import dtos.RoomDTO;
 import dtos.UserDTO;
 import helper.LogMethods;
@@ -87,14 +88,15 @@ public class AnswerDAO implements IAnswerDAO {
 
 	@Override
 	public boolean deleteAnswers(AnswerDTO answer) {
-		if (answers.remove(answer)) {
-
-			updateAnswersFile();
-
-			return true;
+		for (AnswerDTO u : answers) {
+			if (u.getAnswerKey().equals(answer.getAnswerKey())){
+				answers.remove(u);
+				updateAnswersFile();
+				return true;
+				
+			}
 		}
-
-		return false;
+	return false;
 	}
 
 	@Override
