@@ -118,6 +118,11 @@ public class HTSservlet extends HttpServlet {
 
 							if (sessions.sessionMapCheck(user.getUsername(), sessionKey)) {
 								getDataCalls(writer, receivedData);
+							}else{
+								JSONObject reply = new JSONObject();
+								reply.put("REPLY", "failed");
+								reply.put("MESSAGE", "session key error");
+								writer.write(reply.toString());
 							}
 
 						} else {
@@ -279,58 +284,53 @@ public class HTSservlet extends HttpServlet {
 
 	}
 
-
 	public void getDataCalls(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
 		String username = receivedData.get("USERNAME").toString();
 		String sessionKey = receivedData.get("SESSIONKEY").toString();
 		JSONObject reply = new JSONObject();
 		if (sessions.sessionMapCheck(username, sessionKey)) {
-		if (receivedData.get("TASK").equals("getuser")) {
+			if (receivedData.get("TASK").equals("getuser")) {
 
 				UserDTO userFound = userDAO.getUser(receivedData.get("GETNAME").toString());
-			
+
 				reply.put("REPLY", "succes");
 				reply.put("USER", userFound.toJSONObject());
 				writer.write(reply.toString());
-				logger.printLog("GetUser request from:" + username + " found:"
-						+ userFound.toJSONObject().toString());
+				System.out.println(reply.toString());
+				logger.printLog("GetUser request from:" + username + " found:" + userFound.toJSONObject().toString());
 
-			
-
-		} else if (receivedData.get("TASK").equals("getevent")) {
+			} else if (receivedData.get("TASK").equals("getevent")) {
 				EventDTO event = eventDAO.getEvent(receivedData.get("EVENTKEY").toString());
-				
+
 				reply.put("REPLY", "succes");
 				reply.put("EVENT", event.toJSONObject());
 				writer.write(reply.toString());
 				logger.printLog("GetEvent request from: " + receivedData.get("USERNAME").toString() + " found:"
 						+ event.toJSONObject().toString());
 
-			
-		} else if (receivedData.get("TASK").equals("getanswer")) {
-		
+			} else if (receivedData.get("TASK").equals("getanswer")) {
+
 				String answerKey = receivedData.get("ANSWERKEY").toString();
 				AnswerDTO answer = answerDAO.getAnswer(answerKey);
 				reply.put("REPLY", "succes");
 				reply.put("ANSWER", answer.toJSONObject());
 				writer.write(reply.toString());
 				logger.printLog("GetAnswer request from: " + username + " found: " + answer.toJSONObject().toString());
-			
 
-		} else if (receivedData.get("TASK").equals("getroom")) {
+			} else if (receivedData.get("TASK").equals("getroom")) {
 				String roomKey = receivedData.get("ROOMKEY").toString();
 				RoomDTO room = roomDAO.getRoom(roomKey);
 				reply.put("REPLY", "succes");
 				reply.put("ROOM", room.toJSONObject());
 				writer.write(reply.toString());
 				logger.printLog("GetRoom request from: " + username + " found: " + room.toJSONObject().toString());
-		}
-			} else {
-				reply.put("REPLY", "failed");
-				writer.write(reply.toString());
-				logger.printLog("getRoom failed from: " + username + " found: " + receivedData.get("ROOMKEY").toString());
 			}
-		
+		} else {
+			reply.put("REPLY", "failed");
+			writer.write(reply.toString());
+			logger.printLog("getRoom failed from: " + username + " found: " + receivedData.get("ROOMKEY").toString());
+		}
+
 	}
 
 	private boolean loginInfoVerify(JSONObject receivedData) {
@@ -408,8 +408,8 @@ public class HTSservlet extends HttpServlet {
 					receivedData.get("QUESTIONKEYS").toString().length() - 1);
 			List<String> questions = Arrays.asList(testString.toString().split(","));
 			EventDTO event = new EventDTO(receivedData.get("title").toString(),
-					receivedData.get("TIMESTAMP").toString(), receivedData.get("EVENTKEY").toString()
-					,receivedData.get("CREATOR").toString(), questions);
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("EVENTKEY").toString(),
+					receivedData.get("CREATOR").toString(), questions);
 			JSONObject reply = new JSONObject();
 			if (eventDAO.updateEvent(event, event)) {
 				reply.put("REPLY", "succes");
@@ -508,8 +508,8 @@ public class HTSservlet extends HttpServlet {
 
 		} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
 			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("TIMESTAMP").toString(),
-					receivedData.get("CREATOR").toString(), (sessions.generateSessionKey()));
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("CREATOR").toString(),
+					(sessions.generateSessionKey()));
 			JSONObject reply = new JSONObject();
 			if (eventDAO.createEvent(event)) {
 				reply.put("REPLY", "succes");
@@ -550,9 +550,5 @@ public class HTSservlet extends HttpServlet {
 			writer.write("Message recieved but not understood, message:" + receivedData.toString());
 		}
 	}
-
-
-
-	
 
 }

@@ -12,7 +12,7 @@ public class SessionMap {
 	}
 	
 	public void addSession(String username, String sessionKey) {
-		if(sessions.containsKey(username)) return;
+	
 		sessions.put(username, sessionKey);
 	}
 	
