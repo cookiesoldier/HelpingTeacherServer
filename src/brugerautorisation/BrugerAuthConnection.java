@@ -35,13 +35,18 @@ public class BrugerAuthConnection {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Authentication
+	 * @param username
+	 * @param password
+	 * @return user which is authenticated. Returns null if no user is found.
+	 */
 	public UserDTO hentBruger(String username, String password) {
 		String sessionKey = sessions.generateSessionKey();
 		
 		if(isUserInLocalList(username)) {
 			sessions.addSession(username, sessionKey);
-			return userdao.getUser(username); //skal der laves session?
+			return userdao.getUser(username); 
 		} else {
 			Bruger b;
 			String passwordToStore;
@@ -54,7 +59,8 @@ public class BrugerAuthConnection {
 				userdao.createUser(user); // user added to servlet user list
 				return user;
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
+				// Der skete en RemoteException ved ba.hentBruger
+				System.err.println("Der skete en fejl: "+e.getMessage());
 				e.printStackTrace();
 			} catch (Exception e) {
 				System.err.println("password for bruger "+username+" kunne ikke hashes");
