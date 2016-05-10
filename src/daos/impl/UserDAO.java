@@ -1,5 +1,5 @@
 
-package daos;
+package daos.impl;
 
 import java.io.File;
 import java.io.FileInputStream;

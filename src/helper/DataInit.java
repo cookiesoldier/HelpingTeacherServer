@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import daos.AnswerDAO;
-import daos.UserDAO;
+import daos.impl.AnswerDAO;
+import daos.impl.UserDAO;
 import daos.interfaces.IAnswerDAO;
 import daos.interfaces.IEventDAO;
 import daos.interfaces.IQuestionDAO;
@@ -42,7 +42,7 @@ public class DataInit {
 		QuestionDTO queTwo = new QuestionDTO("Data visning", "Nogen gode ideer til at vise data??", logger.timeStamp(), "irj4kpeorkdikt0","thomas",answerKeys2);
 		List<String> answerKeys3 = new ArrayList<>();
 		answerKeys3.add(answerThree.getAnswerKey());
-		QuestionDTO queThree = new QuestionDTO("tærtehjælp!", "Hvordan laver man tærte?", logger.timeStamp(), "irj4kkdjeodi777","peter", answerKeys3);
+		QuestionDTO queThree = new QuestionDTO("tï¿½rtehjï¿½lp!", "Hvordan laver man tï¿½rte?", logger.timeStamp(), "irj4kkdjeodi777","peter", answerKeys3);
 		questionDAO.createQuestion(queOne);
 		questionDAO.createQuestion(queTwo);
 		questionDAO.createQuestion(queThree);
@@ -69,7 +69,7 @@ public class DataInit {
 		List<String> eventKeys2 = new ArrayList<>();
 		eventKeys2.add(eventTwo.getEventKey());
 		RoomDTO roomOne = new RoomDTO("Uni2016","abcdefrtghi9847", "martin", "public",eventKeys);
-		RoomDTO roomTwo = new RoomDTO("Madhjørnet","gauejr8rjd9ikd3", "peter", "public",eventKeys2);
+		RoomDTO roomTwo = new RoomDTO("Madhjï¿½rnet","gauejr8rjd9ikd3", "peter", "public",eventKeys2);
 		RoomDTO roomThree = new RoomDTO("Random","pdl3kr85jd9ikd3", "thomas", "public");
 		roomDAO.createRoom(roomOne);
 		roomDAO.createRoom(roomTwo);
