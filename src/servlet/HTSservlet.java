@@ -44,6 +44,7 @@ public class HTSservlet extends HttpServlet {
 	IRoomDAO roomDAO = Handler.roomdao;
 	IUserDAO userDAO = Handler.userdao;
 	LogMethods logger = new LogMethods();
+	boolean runOnce = true;
 	// sessions, en given bruger ved login vil f� en sessionID tilknyttet til
 	// login navnet, denne sessionID bruger til at bekr�fte
 	// hvem de er hvergang de vil lave en action udover login og create user
@@ -65,7 +66,7 @@ public class HTSservlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		boolean runOnce = true;
+
 		if (runOnce) {
 			DataInit dataTest = new DataInit(userDAO, roomDAO, answerDAO, questionDAO, eventDAO);
 			runOnce = false;
@@ -118,11 +119,12 @@ public class HTSservlet extends HttpServlet {
 
 							if (sessions.sessionMapCheck(user.getUsername(), sessionKey)) {
 								getDataCalls(writer, receivedData);
-							}else{
+							} else {
 								JSONObject reply = new JSONObject();
 								reply.put("REPLY", "failed");
 								reply.put("MESSAGE", "session key error");
 								writer.write(reply.toString());
+								logger.printLog("User not authenticated: " + user.toJSONObject().toString());
 							}
 
 						} else {
@@ -155,7 +157,9 @@ public class HTSservlet extends HttpServlet {
 		// writer til at skrive response tilbage
 		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
 		try {
-
+			writer.write("Not Implemented 404");
+			writer.flush();
+			writer.close();
 		} catch (IllegalStateException e) {
 
 		}
@@ -205,14 +209,20 @@ public class HTSservlet extends HttpServlet {
 							logger.printLog("User Authenticated " + sessionKey);
 
 							if (receivedData.get("TASK").toString().contains("UPDATE")) {
+								logger.printLog("update Request " + receivedData.get("TASK").toString());
 								putUpdate(writer, receivedData);
 							} else if (receivedData.get("TASK").toString().contains("CREATE")) {
 								logger.printLog("create Request " + receivedData.get("TASK").toString());
 								putCreate(writer, receivedData);
+							} else if (receivedData.get("TASK").toString().contains("DELETE")) {
+								logger.printLog("delete Request " + receivedData.get("TASK").toString());
+								putDelete(writer, receivedData);
+
 							} else {
 								reply.put("REPLY", "failed");
-								reply.put("MESSAGE", "Received message did not contain create or update.");
+								reply.put("MESSAGE", "Received message did not contain create, update or delete");
 								writer.write(reply.toString());
+								logger.printLog("Request received mismatch --> " + receivedData.toString());
 							}
 						} else {
 							reply.put("REPLY", "failed");
@@ -407,7 +417,7 @@ public class HTSservlet extends HttpServlet {
 			String testString = receivedData.get("QUESTIONKEYS").toString().substring(1,
 					receivedData.get("QUESTIONKEYS").toString().length() - 1);
 			List<String> questions = Arrays.asList(testString.toString().split(","));
-			EventDTO event = new EventDTO(receivedData.get("title").toString(),
+			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
 					receivedData.get("TIMESTAMP").toString(), receivedData.get("EVENTKEY").toString(),
 					receivedData.get("CREATOR").toString(), questions);
 			JSONObject reply = new JSONObject();
@@ -507,9 +517,10 @@ public class HTSservlet extends HttpServlet {
 			writer.write(reply.toString());
 
 		} else if (receivedData.get("TASK").equals("CREATEEVENT")) {
+			
 			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("TIMESTAMP").toString(), receivedData.get("CREATOR").toString(),
-					(sessions.generateSessionKey()));
+					receivedData.get("TIMESTAMP").toString(), 
+					(sessions.generateSessionKey()),receivedData.get("CREATOR").toString());
 			JSONObject reply = new JSONObject();
 			if (eventDAO.createEvent(event)) {
 				reply.put("REPLY", "succes");
@@ -551,4 +562,81 @@ public class HTSservlet extends HttpServlet {
 		}
 	}
 
+	private void putDelete(OutputStreamWriter writer, JSONObject receivedData) throws IOException {
+		JSONObject reply = new JSONObject();
+		if (receivedData.get("TASK").equals("DELETEUSER")) {
+			// System.out.println(receivedData.toString());
+			UserDTO user = new UserDTO(receivedData.get("USERNAME").toString(), receivedData.get("PASSONE").toString());
+			
+			if (userDAO.deleteUser(user)) {
+				reply.put("REPLY", "succes");
+				reply.put("DELETED", user.toJSONObject());
+				logger.printLog("User deleted: " + user.getUsername() + " pass: " + user.getPassword());
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("RECEIVED", receivedData.toString());
+			}
+			writer.write(reply.toString());
+		} else if (receivedData.get("TASK").equals("DELETEANSWER")) {
+			AnswerDTO answer = new AnswerDTO(sessions.generateSessionKey(), receivedData.get("BODY").toString(),
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
+		
+			if (answerDAO.deleteAnswers(answer)) {
+				reply.put("REPLY", "succes");
+				reply.put("DELETED", answer.toJSONObject());
+				logger.printLog("Answer deleted: " + answer.toJSONObject().toString());
+
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("RECEIVED", receivedData.toString());
+			}
+		} else if (receivedData.get("TASK").equals("DELETEEVENT")) {
+			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
+					receivedData.get("TIMESTAMP").toString(), receivedData.get("CREATOR").toString(),
+					(sessions.generateSessionKey()));
+			
+			if (eventDAO.deleteEvent(event)) {
+				reply.put("REPLY", "succes");
+				reply.put("DELETED", event.toJSONObject());
+				logger.printLog("Event deleted: " + event.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("RECEIVED", receivedData.toString());
+			}
+			writer.write(reply.toString());
+
+		} else if (receivedData.get("TASK").equals("DELETEQUESTION")) {
+			QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
+					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
+					sessions.generateSessionKey(), receivedData.get("SENDER").toString());
+			
+			if (questionDAO.deleteQuestion(question)) {
+				reply.put("REPLY", "succes");
+				reply.put("DELETED", question.toJSONObject());
+				logger.printLog("Question deleted: " + question.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("RECEIVED", receivedData.toString());
+			}
+			writer.write(reply.toString());
+		} else if (receivedData.get("TASK").equals("CREATEROOM")) {
+			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessions.generateSessionKey(),
+					receivedData.get("OWNER").toString(), receivedData.get("TYPE").toString());
+		
+			if (roomDAO.deleteRoom(room)) {
+				reply.put("REPLY", "succes");
+				reply.put("DELETED", room.toJSONObject());
+				logger.printLog("Room deleted: " + room.toJSONObject().toString());
+			} else {
+				reply.put("REPLY", "failed");
+				reply.put("RECEIVED", receivedData.toString());
+			}
+			}else{
+				
+				reply.put("REPLY","FAILED");
+				reply.put("ERROR", "message not understood");
+			}
+			writer.write(reply.toString());
+		}
+	
 }

@@ -51,13 +51,13 @@ public class RoomDAO implements IRoomDAO {
 		RoomDTO room = getRoom(oldRoom.getRoomKey());
 		if (room != null) {
 			int roomNr = rooms.indexOf(room);
-			rooms.remove( roomNr );
-			rooms.add( roomNr , newRoom);
-		
+			rooms.remove(roomNr);
+			rooms.add(roomNr, newRoom);
+
 			if (getRoom(newRoom.getRoomKey()) != null) {
 				updateRoomFile();
 				return true;
-				
+
 			}
 		}
 		return false;
@@ -90,11 +90,16 @@ public class RoomDAO implements IRoomDAO {
 
 	@Override
 	public boolean deleteRoom(RoomDTO room) {
-		if (rooms.remove(room)) {
-			updateRoomFile();
-			return true;
+		
+		for (RoomDTO u : rooms) {
+			if (u.getRoomKey().equals(room.getRoomKey())){
+				rooms.remove(u);
+				updateRoomFile();
+				return true;
+				
+			}
 		}
-		return false;
+	return false;
 
 	}
 

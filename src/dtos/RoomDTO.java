@@ -66,6 +66,7 @@ public class RoomDTO implements Serializable {
 		data.put("ROOMKEY", roomKey);
 		data.put("OWNER", owner);
 		data.put("TYPE", type);
+		data.put("TITLE", title);
 		data.put("EVENTKEYS", eventKeys);
 		
 		return data;
