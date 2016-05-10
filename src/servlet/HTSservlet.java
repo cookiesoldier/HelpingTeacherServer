@@ -114,92 +114,98 @@ public class HTSservlet extends HttpServlet {
 							logger.printLog("User not authenticated: " + user.toJSONObject().toString());
 						}
 
-					} else if (receivedData.get("TASK").equals("getuser")) {
-						UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
-						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						// check who it is, if match to sessionKey do stuff,
-						// else reply error
-						if (sessionMapCheck(user.getUsername(), sessionKey)) {
+					} else {
 
-							UserDTO userFound = userDAO.getUser(receivedData.get("GETNAME").toString());
+						if (receivedData.get("TASK").equals("getuser")) {
+							UserDTO user = new UserDTO(receivedData.get("USERNAME").toString());
+							String sessionKey = receivedData.get("SESSIONKEY").toString();
+							// check who it is, if match to sessionKey do stuff,
+							// else reply error
+							if (sessionMapCheck(user.getUsername(), sessionKey)) {
+
+								UserDTO userFound = userDAO.getUser(receivedData.get("GETNAME").toString());
+								JSONObject reply = new JSONObject();
+								reply.put("REPLY", "succes");
+								reply.put("USER", userFound.toJSONObject());
+								writer.write(reply.toString());
+								logger.printLog("GetUser request from:" + user.toJSONObject().toString() + " found:"
+										+ userFound.toJSONObject().toString());
+
+							} else {
+								JSONObject reply = new JSONObject();
+								reply.put("REPLY", "failed");
+								reply.put("MESSAGE", "Sessionkey not matching");
+								writer.write(reply.toString());
+								logger.printLog("GetUser failed from: " + user.toJSONObject().toString() + " requested:"
+										+ receivedData.get("GETNAME").toString());
+							}
+
+						} else if (receivedData.get("TASK").equals("getevent")) {
+							String sessionKey = receivedData.get("SESSIONKEY").toString();
+							if (sessionMapCheck(receivedData.get("USERNAME").toString(), sessionKey)) {
+								EventDTO event = eventDAO.getEvent(receivedData.get("EVENTKEY").toString());
+								JSONObject reply = new JSONObject();
+								reply.put("REPLY", "succes");
+								reply.put("EVENT", event.toJSONObject());
+								writer.write(reply.toString());
+								logger.printLog("GetEvent request from: " + receivedData.get("USERNAME").toString()
+										+ " found:" + event.toJSONObject().toString());
+
+							} else {
+								JSONObject reply = new JSONObject();
+								reply.put("REPLY", "failed");
+								reply.put("MESSAGE", "Sessionkey not matching");
+								writer.write(reply.toString());
+								logger.printLog("GetEvent failed from: " + receivedData.get("USERNAME").toString()
+										+ " requested: " + receivedData.get("EVENTKEY").toString());
+
+							}
+						} else if (receivedData.get("TASK").equals("getanswer")) {
+							String username = receivedData.get("USERNAME").toString();
+							String sessionKey = receivedData.get("SESSIONKEY").toString();
 							JSONObject reply = new JSONObject();
-							reply.put("REPLY", "succes");
-							reply.put("USER", userFound.toJSONObject());
-							writer.write(reply.toString());
-							logger.printLog("GetUser request from:" + user.toJSONObject().toString() + " found:"
-									+ userFound.toJSONObject().toString());
 
-						} else {
+							if (sessionMapCheck(username, sessionKey)) {
+								// skal hente et specifikt svar, defineret af
+								// dens
+								// key
+								String answerKey = receivedData.get("ANSWERKEY").toString();
+								AnswerDTO answer = answerDAO.getAnswer(answerKey);
+								reply.put("REPLY", "succes");
+								reply.put("ANSWER", answer.toJSONObject());
+								writer.write(reply.toString());
+								logger.printLog("GetAnswer request from: " + username + " found: "
+										+ answer.toJSONObject().toString());
+							} else {
+								reply.put("REPLY", "failed");
+								writer.write(reply.toString());
+								logger.printLog("getAnswer failed from: " + username + " found: "
+										+ receivedData.get("ANSWERKEY").toString());
+							}
+
+						} else if (receivedData.get("TASK").equals("getroom")) {
+							String username = receivedData.get("USERNAME").toString();
+							String sessionKey = receivedData.get("SESSIONKEY").toString();
 							JSONObject reply = new JSONObject();
-							reply.put("REPLY", "failed");
-							reply.put("MESSAGE", "Sessionkey not matching");
-							writer.write(reply.toString());
-							logger.printLog("GetUser failed from: " + user.toJSONObject().toString() + " requested:"
-									+ receivedData.get("GETNAME").toString());
-						}
 
-					} else if (receivedData.get("TASK").equals("getevent")) {
-						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						if (sessionMapCheck(receivedData.get("USERNAME").toString(), sessionKey)) {
-							EventDTO event = eventDAO.getEvent(receivedData.get("EVENTKEY").toString());
-							JSONObject reply = new JSONObject();
-							reply.put("REPLY", "succes");
-							reply.put("EVENT", event.toJSONObject());
-							writer.write(reply.toString());
-							logger.printLog("GetEvent request from: " + receivedData.get("USERNAME").toString()
-									+ " found:" + event.toJSONObject().toString());
+							if (sessionMapCheck(username, sessionKey)) {
+								// skal hente et specifikt svar, defineret af
+								// dens
+								// key
+								String roomKey = receivedData.get("ROOMKEY").toString();
+								RoomDTO room = roomDAO.getRoom(roomKey);
+								reply.put("REPLY", "succes");
+								reply.put("ROOM", room.toJSONObject());
+								writer.write(reply.toString());
+								logger.printLog("GetRoom request from: " + username + " found: "
+										+ room.toJSONObject().toString());
+							} else {
+								reply.put("REPLY", "failed");
+								writer.write(reply.toString());
+								logger.printLog("getRoom failed from: " + username + " found: "
+										+ receivedData.get("ROOMKEY").toString());
+							}
 
-						} else {
-							JSONObject reply = new JSONObject();
-							reply.put("REPLY", "failed");
-							reply.put("MESSAGE", "Sessionkey not matching");
-							writer.write(reply.toString());
-							logger.printLog("GetEvent failed from: " + receivedData.get("USERNAME").toString()
-									+ " requested: " + receivedData.get("EVENTKEY").toString());
-
-						}
-					} else if (receivedData.get("TASK").equals("getanswer")) {
-						String username = receivedData.get("USERNAME").toString();
-						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						JSONObject reply = new JSONObject();
-
-						if (sessionMapCheck(username, sessionKey)) {
-							// skal hente et specifikt svar, defineret af dens
-							// key
-							String answerKey = receivedData.get("ANSWERKEY").toString();
-							AnswerDTO answer = answerDAO.getAnswer(answerKey);
-							reply.put("REPLY", "succes");
-							reply.put("ANSWER", answer.toJSONObject());
-							writer.write(reply.toString());
-							logger.printLog("GetAnswer request from: " + username + " found: "
-									+ answer.toJSONObject().toString());
-						} else {
-							reply.put("REPLY", "failed");
-							writer.write(reply.toString());
-							logger.printLog("getAnswer failed from: " + username + " found: "
-									+ receivedData.get("ANSWERKEY").toString());
-						}
-
-					} else if (receivedData.get("TASK").equals("getroom")) {
-						String username = receivedData.get("USERNAME").toString();
-						String sessionKey = receivedData.get("SESSIONKEY").toString();
-						JSONObject reply = new JSONObject();
-
-						if (sessionMapCheck(username, sessionKey)) {
-							// skal hente et specifikt svar, defineret af dens
-							// key
-							String roomKey = receivedData.get("ROOMKEY").toString();
-							RoomDTO room = roomDAO.getRoom(roomKey);
-							reply.put("REPLY", "succes");
-							reply.put("ROOM", room.toJSONObject());
-							writer.write(reply.toString());
-							logger.printLog(
-									"GetRoom request from: " + username + " found: " + room.toJSONObject().toString());
-						} else {
-							reply.put("REPLY", "failed");
-							writer.write(reply.toString());
-							logger.printLog("getRoom failed from: " + username + " found: "
-									+ receivedData.get("ROOMKEY").toString());
 						}
 
 					}
@@ -226,7 +232,19 @@ public class HTSservlet extends HttpServlet {
 
 	}
 
-	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String paramName = "delete";
+		String paramValue = request.getParameter(paramName);
+		// writer til at skrive response tilbage
+		OutputStreamWriter writer = new OutputStreamWriter(response.getOutputStream());
+		try {
+
+		} catch (IllegalStateException e) {
+
+		}
+
+	}
+
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// System.out.println("doPut");
@@ -248,55 +266,45 @@ public class HTSservlet extends HttpServlet {
 				String recievedString = new String(input);
 				JSONParser parser = new JSONParser();
 				JSONObject receivedData = null;
-			
-					receivedData = (JSONObject) parser.parse(recievedString);
-				
-				// hent task:
 
-				
-				
+				receivedData = (JSONObject) parser.parse(recievedString);
+
+				// hent task:
 
 				// check who it is, if match to sessionKey do stuff,
 				// else reply error
 				JSONObject reply = new JSONObject();
-				String sessionKey = null;
-				logger.printLog("preput" + receivedData);
-				 
+			
 				if (receivedData.get("TASK").toString().equals("CREATEUSER")) {
 					putCreate(writer, receivedData);
-				} else {
-					logger.printLog("data received " + receivedData);
-					if (receivedData.containsKey("SESSIONKEY")) {
+				}
+				 else {
+					if (updateCreateDataVerify(receivedData)) {
+						String sessionKey = null;
+						UserDTO user = null;
 						sessionKey = receivedData.get("SESSIONKEY").toString();
-						logger.printLog("sessionKey received "+sessionKey);
-					}
-					UserDTO user = null;
-					if(receivedData.containsKey("USERNAME")){
-						 user = new UserDTO(receivedData.get("USERNAME").toString());
-						 logger.printLog("Username Received" + user);
-					}
-					if (sessionKey != null && user != null) {
-
+						user = new UserDTO(receivedData.get("USERNAME").toString());
+						
 						if (sessionMapCheck(user.getUsername(), sessionKey)) {
-							logger.printLog("User Authenticated "+sessionKey);
+							logger.printLog("User Authenticated " + sessionKey);
 							if (receivedData.get("TASK").toString().contains("UPDATE")) {
 								putUpdate(writer, receivedData);
 							} else if (receivedData.get("TASK").toString().contains("CREATE")) {
-								logger.printLog("create Request "+receivedData.get("TASK").toString());
+								logger.printLog("create Request " + receivedData.get("TASK").toString());
 								putCreate(writer, receivedData);
-							}else{
+							} else {
 								reply.put("REPLY", "failed");
 								reply.put("MESSAGE", "Received message did not contain create or update.");
 								writer.write(reply.toString());
 							}
-						}else{
+						} else {
 							reply.put("REPLY", "failed");
 							reply.put("MESSAGE", "Error sessionkey mismatch");
 							writer.write(reply.toString());
 						}
-					}else{
+					} else {
 						reply.put("REPLY", "failed");
-						reply.put("MESSAGE", "Session key or username error");
+						reply.put("MESSAGE", "Input Error");
 						writer.write(reply.toString());
 					}
 				}
@@ -311,6 +319,27 @@ public class HTSservlet extends HttpServlet {
 			response.getWriter().print(e.getMessage());
 			response.getWriter().close();
 
+		}
+	}
+
+	private boolean updateCreateDataVerify(JSONObject receivedData) {
+
+		String sessionKey = null;
+		UserDTO user = null;
+		logger.printLog("data received " + receivedData);
+		if (receivedData.containsKey("SESSIONKEY")) {
+			sessionKey = receivedData.get("SESSIONKEY").toString();
+			logger.printLog("sessionKey received " + sessionKey);
+		}
+
+		if (receivedData.containsKey("USERNAME")) {
+			user = new UserDTO(receivedData.get("USERNAME").toString());
+			logger.printLog("Username Received" + user);
+		}
+		if (sessionKey != null && user != null) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
