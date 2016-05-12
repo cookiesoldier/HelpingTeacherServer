@@ -195,7 +195,7 @@ public class HTSservlet extends HttpServlet {
 				// check who it is, if match to sessionKey do stuff,
 				// else reply error
 				JSONObject reply = new JSONObject();
-
+				logger.printLog("data received" + receivedData.toString());
 				if (receivedData.get("TASK").toString().equals("CREATEUSER")) {
 					putCreate(writer, receivedData);
 				} else {
@@ -368,6 +368,7 @@ public class HTSservlet extends HttpServlet {
 
 		// If wrong data input, user overridden/replaced... so be carefull?
 		if (receivedData.get("TASK").equals("UPDATEUSER")) {
+			logger.printLog("Attempts to update user --->" + receivedData.toString());
 			String testString = receivedData.get("SUBBEDROOMS").toString().substring(1,
 					receivedData.get("SUBBEDROOMS").toString().length() - 1);
 			List<String> subbedRooms = Arrays.asList(testString.toString().split(","));
@@ -394,7 +395,7 @@ public class HTSservlet extends HttpServlet {
 			}
 
 		} else if (receivedData.get("TASK").equals("UPDATEANSWER")) {
-			AnswerDTO answer = new AnswerDTO(receivedData.get("answerkey").toString(),
+			AnswerDTO answer = new AnswerDTO(receivedData.get("ANSWERKEY").toString(),
 					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
 					receivedData.get("SENDER").toString());
 			JSONObject reply = new JSONObject();
@@ -578,27 +579,26 @@ public class HTSservlet extends HttpServlet {
 			}
 			writer.write(reply.toString());
 		} else if (receivedData.get("TASK").equals("DELETEANSWER")) {
-			AnswerDTO answer = new AnswerDTO(sessions.generateSessionKey(), receivedData.get("BODY").toString(),
-					receivedData.get("TIMESTAMP").toString(), receivedData.get("SENDER").toString());
+			AnswerDTO answer = new AnswerDTO(receivedData.get("ANSWERKEY").toString(), "","","");
 		
 			if (answerDAO.deleteAnswers(answer)) {
 				reply.put("REPLY", "succes");
 				reply.put("DELETED", answer.toJSONObject());
-				logger.printLog("Answer deleted: " + answer.toJSONObject().toString());
+				logger.printLog("Answer deleted: " + answer.toJSONObject());
 
 			} else {
 				reply.put("REPLY", "failed");
 				reply.put("RECEIVED", receivedData.toString());
 			}
 		} else if (receivedData.get("TASK").equals("DELETEEVENT")) {
-			EventDTO event = new EventDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("TIMESTAMP").toString(), receivedData.get("CREATOR").toString(),
-					(sessions.generateSessionKey()));
+			EventDTO event = new EventDTO("",
+					"", "",
+					(receivedData.get("EVENTKEY").toString()));
 			
 			if (eventDAO.deleteEvent(event)) {
 				reply.put("REPLY", "succes");
 				reply.put("DELETED", event.toJSONObject());
-				logger.printLog("Event deleted: " + event.toJSONObject().toString());
+				logger.printLog("Event deleted: " + event.toJSONObject());
 			} else {
 				reply.put("REPLY", "failed");
 				reply.put("RECEIVED", receivedData.toString());
@@ -606,27 +606,24 @@ public class HTSservlet extends HttpServlet {
 			writer.write(reply.toString());
 
 		} else if (receivedData.get("TASK").equals("DELETEQUESTION")) {
-			QuestionDTO question = new QuestionDTO(receivedData.get("TITLE").toString(),
-					receivedData.get("BODY").toString(), receivedData.get("TIMESTAMP").toString(),
-					sessions.generateSessionKey(), receivedData.get("SENDER").toString());
+			QuestionDTO question = new QuestionDTO("","", "",receivedData.get("QUESTIONKEY").toString(), "");
 			
 			if (questionDAO.deleteQuestion(question)) {
 				reply.put("REPLY", "succes");
 				reply.put("DELETED", question.toJSONObject());
-				logger.printLog("Question deleted: " + question.toJSONObject().toString());
+				logger.printLog("Question deleted: " + question.toJSONObject());
 			} else {
 				reply.put("REPLY", "failed");
 				reply.put("RECEIVED", receivedData.toString());
 			}
 			writer.write(reply.toString());
 		} else if (receivedData.get("TASK").equals("CREATEROOM")) {
-			RoomDTO room = new RoomDTO(receivedData.get("TITLE").toString(), sessions.generateSessionKey(),
-					receivedData.get("OWNER").toString(), receivedData.get("TYPE").toString());
+			RoomDTO room = new RoomDTO("", receivedData.get("ROOMKEY").toString(),"", "");
 		
 			if (roomDAO.deleteRoom(room)) {
 				reply.put("REPLY", "succes");
 				reply.put("DELETED", room.toJSONObject());
-				logger.printLog("Room deleted: " + room.toJSONObject().toString());
+				logger.printLog("Room deleted: " + room.toJSONObject());
 			} else {
 				reply.put("REPLY", "failed");
 				reply.put("RECEIVED", receivedData.toString());
